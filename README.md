@@ -1,4 +1,4 @@
-# star
+# Mibt-free
 深度人格测评系统 README
  
 一、项目简介
