@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>深度人格测试 | 探索真实的自己</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+primary: {
+50: '#f0f9ff',
+100: '#e0f2fe',
+200: '#bae6fd',
+300: '#7dd3fc',
+400: '#38bdf8',
+500: '#0ea5e9',
+600: '#0284c7',
+700: '#0369a1',
+800: '#075985',
+900: '#0c4a6e',
+},
+accent: {
+400: '#fb923c',
+500: '#f97316',
+600: '#ea580c',
+},
+surface: {
+glass: 'rgba(255, 255, 255, 0.7)',
+glassDark: 'rgba(255, 255, 255, 0.15)',
+}
+},
+fontFamily: {
+display: ['Poppins', 'sans-serif'],
+body: ['Inter', 'sans-serif'],
+}
+}
+}
+}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+* { font-family: 'Inter', sans-serif; }
+h1, h2, h3, h4, h5, h6 { font-family: 'Poppins', sans-serif; }
+
+body {
+background: linear-gradient(135deg, #1e3a5f 0%, #0c1929 50%, #1a1a2e 100%);
+min-height: 100vh;
+}
+
+.glass {
+background: rgba(255, 255, 255, 0.08);
+backdrop-filter: blur(20px);
+-webkit-backdrop-filter: blur(20px);
+border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-light {
+background: rgba(255, 255, 255, 0.95);
+backdrop-filter: blur(20px);
+-webkit-backdrop-filter: blur(20px);
+border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.glow {
+box-shadow: 0 0 60px rgba(14, 165, 233, 0.3), 0 0 100px rgba(14, 165, 233, 0.1);
+}
+
+.option-card {
+transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.option-card:hover {
+transform: translateY(-8px) scale(1.02);
+box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(14, 165, 233, 0.2);
+}
+
+.progress-ring {
+transform: rotate(-90deg);
+}
+
+.fade-in {
+animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(20px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+.slide-up {
+animation: slideUp 0.6s ease-out;
+}
+
+@keyframes slideUp {
+from { opacity: 0; transform: translateY(40px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+.pulse-glow {
+animation: pulseGlow 2s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+0%, 100% { box-shadow: 0 0 20px rgba(14, 165, 233, 0.3); }
+50% { box-shadow: 0 0 40px rgba(14, 165, 233, 0.6); }
+}
+
+.radar-chart {
+position: relative;
+width: 300px;
+height: 300px;
+}
+
+.radar-bg {
+stroke: rgba(255, 255, 255, 0.1);
+fill: none;
+}
+
+.radar-data {
+fill: rgba(14, 165, 233, 0.3);
+stroke: #0ea5e9;
+stroke-width: 2;
+transition: all 0.5s ease;
+}
+
+.radar-point {
+fill: #f97316;
+stroke: white;
+stroke-width: 2;
+}
+
+.option-btn {
+transition: all 0.2s ease;
+}
+
+.option-btn:hover {
+background: rgba(14, 165, 233, 0.2);
+border-color: #0ea5e9;
+}
+
+.option-btn.selected {
+background: linear-gradient(135deg, #0ea5e9, #0284c7);
+border-color: transparent;
+color: white;
+}
+
+.floating-orb {
+position: absolute;
+border-radius: 50%;
+filter: blur(60px);
+opacity: 0.4;
+animation: float 8s ease-in-out infinite;
+}
+
+@keyframes float {
+0%, 100% { transform: translate(0, 0); }
+50% { transform: translate(30px, -30px); }
+}
+
+::-webkit-scrollbar {
+width: 8px;
+}
+
+::-webkit-scrollbar-track {
+background: rgba(255, 255, 255, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+background: rgba(14, 165, 233, 0.5);
+border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+background: rgba(14, 165, 233, 0.7);
+}
+</style>
+</head>
+<body class="text-white overflow-x-hidden">
+<!-- 背景装饰 -->
+<div class="fixed inset-0 overflow-hidden pointer-events-none">
+<div class="floating-orb w-96 h-96 bg-blue-500 top-0 left-0"></div>
+<div class="floating-orb w-80 h-80 bg-purple-500 bottom-0 right-0" style="animation-delay: -4s;"></div>
+<div class="floating-orb w-64 h-64 bg-cyan-500 top-1/2 left-1/2" style="animation-delay: -2s;"></div>
+</div>
+
+<!-- 主容器 -->
+<div id="app" class="relative z-10 min-h-screen">
+<!-- 首页 -->
+<div id="home-page" class="min-h-screen flex items-center justify-center p-4">
+<div class="max-w-4xl w-full">
+<div class="text-center mb-12 fade-in">
+<div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6">
+<i class="fas fa-brain text-accent-400"></i>
+<span class="text-sm font-medium text-gray-300">专业心理测评系统</span>
+</div>
+<h1 class="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-white via-blue-200 to-cyan-300 bg-clip-text text-transparent">
+深度人格测试
+</h1>
+<p class="text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
+探索你内心深处的真实自我，发现隐藏的性格特质，解锁你的潜能与未来方向
+</p>
+</div>
+
+<div class="grid md:grid-cols-2 gap-6 slide-up" style="animation-delay: 0.2s;">
+<!-- 简单版 -->
+<div class="option-card glass rounded-3xl p-8 cursor-pointer group" onclick="startTest('simple')">
+<div class="flex items-start justify-between mb-6">
+<div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+<i class="fas fa-leaf text-2xl text-white"></i>
+</div>
+<span class="px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-sm font-medium">约5分钟</span>
+</div>
+<h3 class="text-2xl font-bold mb-3 text-white">简单版</h3>
+<p class="text-gray-400 mb-6 leading-relaxed">快速了解你的核心性格特质，适合初次体验或时间有限的用户</p>
+<div class="space-y-3">
+<div class="flex items-center gap-3 text-gray-300">
+<i class="fas fa-check-circle text-green-400"></i>
+<span>24道精选题目</span>
+</div>
+<div class="flex items-center gap-3 text-gray-300">
+<i class="fas fa-check-circle text-green-400"></i>
+<span>6大核心维度分析</span>
+</div>
+<div class="flex items-center gap-3 text-gray-300">
+<i class="fas fa-check-circle text-green-400"></i>
+<span>基础性格报告</span>
+</div>
+</div>
+<div class="mt-6 pt-6 border-t border-white/10 flex items-center justify-between">
+<span class="text-gray-500">适合快速了解</span>
+<i class="fas fa-arrow-right text-accent-400 group-hover:translate-x-2 transition-transform"></i>
+</div>
+</div>
+
+<!-- 复杂版 -->
+<div class="option-card glass rounded-3xl p-8 cursor-pointer group relative overflow-hidden" onclick="startTest('complex')">
+<div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-accent-500/20 to-transparent rounded-bl-full"></div>
+<div class="flex items-start justify-between mb-6">
+<div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent-400 to-orange-600 flex items-center justify-center group-hover:scale-110 transition-transform pulse-glow">
+<i class="fas fa-gem text-2xl text-white"></i>
+</div>
+<span class="px-3 py-1 rounded-full bg-accent-500/20 text-accent-400 text-sm font-medium">约15分钟</span>
+</div>
+<h3 class="text-2xl font-bold mb-3 text-white">深度版</h3>
+<p class="text-gray-400 mb-6 leading-relaxed">全面深入的人格剖析，多维度交叉分析，获得最详尽的性格画像</p>
+<div class="space-y-3">
+<div class="flex items-center gap-3 text-gray-300">
+<i class="fas fa-check-circle text-accent-400"></i>
+<span>60道深度题目</span>
+</div>
+<div class="flex items-center gap-3 text-gray-300">
+<i class="fas fa-check-circle text-accent-400"></i>
+<span>12维度精细分析</span>
+</div>
+<div class="flex items-center gap-3 text-gray-300">
+<i class="fas fa-check-circle text-accent-400"></i>
+<span>完整性格报告 + 职业建议</span>
+</div>
+<div class="flex items-center gap-3 text-gray-300">
+<i class="fas fa-check-circle text-accent-400"></i>
+<span>爱好推荐 + 未来规划</span>
+</div>
+</div>
+<div class="mt-6 pt-6 border-t border-white/10 flex items-center justify-between">
+<span class="text-gray-500">推荐选择</span>
+<i class="fas fa-arrow-right text-accent-400 group-hover:translate-x-2 transition-transform"></i>
+</div>
+</div>
+</div>
+
+<div class="mt-12 text-center fade-in" style="animation-delay: 0.4s;">
+<p class="text-gray-500 text-sm">
+<i class="fas fa-shield-alt mr-2"></i>
+你的所有回答将被严格保密，仅用于生成个人报告
+</p>
+</div>
+</div>
+</div>
+
+<!-- 测试页面 -->
+<div id="test-page" class="min-h-screen p-4 hidden">
+<div class="max-w-3xl mx-auto py-8">
+<!-- 进度条 -->
+<div class="mb-8">
+<div class="flex items-center justify-between mb-3">
+<span class="text-sm text-gray-400">测试进度</span>
+<span id="progress-text" class="text-sm font-medium text-white">0 / 24</span>
+</div>
+<div class="h-2 bg-white/10 rounded-full overflow-hidden">
+<div id="progress-bar" class="h-full bg-gradient-to-r from-primary-500 to-cyan-400 rounded-full transition-all duration-500" style="width: 0%"></div>
+</div>
+</div>
+
+<!-- 题目卡片 -->
+<div id="question-container" class="glass rounded-3xl p-8 md:p-10">
+<div class="mb-8">
+<span id="dimension-badge" class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-500/20 text-primary-300 text-sm font-medium mb-4">
+<i class="fas fa-cube"></i>
+<span>维度名称</span>
+</span>
+<h2 id="question-text" class="text-xl md:text-2xl font-semibold text-white leading-relaxed">
+题目内容
+</h2>
+</div>
+
+<div id="options-container" class="space-y-3">
+<!-- 选项按钮 -->
+</div>
+</div>
+
+<!-- 导航按钮 -->
+<div class="flex items-center justify-between mt-6">
+<button id="prev-btn" onclick="prevQuestion()" class="px-6 py-3 rounded-xl glass text-gray-300 hover:text-white transition-colors flex items-center gap-2 disabled:opacity-30 disabled:cursor-not-allowed" disabled>
+<i class="fas fa-arrow-left"></i>
+<span>上一题</span>
+</button>
+<button id="next-btn" onclick="nextQuestion()" class="px-6 py-3 rounded-xl bg-gradient-to-r from-primary-500 to-cyan-500 text-white font-medium hover:shadow-lg hover:shadow-primary-500/30 transition-all flex items-center gap-2 disabled:opacity-30 disabled:cursor-not-allowed" disabled>
+<span>下一题</span>
+<i class="fas fa-arrow-right"></i>
+</button>
+</div>
+</div>
+</div>
+
+<!-- 结果页面 -->
+<div id="result-page" class="min-h-screen p-4 hidden">
+<div class="max-w-5xl mx-auto py-8">
+<div class="text-center mb-12 fade-in">
+<div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6">
+<i class="fas fa-sparkles text-accent-400"></i>
+<span class="text-sm font-medium text-gray-300">测试完成</span>
+</div>
+<h1 class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white via-blue-200 to-cyan-300 bg-clip-text text-transparent">
+你的人格画像
+</h1>
+<p class="text-gray-400">基于你的回答，我们为你生成了专属的性格分析报告</p>
+</div>
+
+<!-- 主要结果 -->
+<div id="result-content" class="space-y-8">
+<!-- 动态生成 -->
+</div>
+
+<!-- 重新测试 -->
+<div class="text-center mt-12 fade-in">
+<button onclick="resetTest()" class="px-8 py-4 rounded-2xl glass text-white font-medium hover:bg-white/10 transition-all flex items-center gap-3 mx-auto">
+<i class="fas fa-redo"></i>
+<span>重新测试</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+// ==================== 数据定义 ====================
+
+// 维度定义
+const dimensions = {
+simple: [
+{ id: 'E', name: '外向性', icon: 'fa-users', color: 'blue', description: '衡量你在社交互动中的能量获取方式' },
+{ id: 'O', name: '开放性', icon: 'fa-lightbulb', color: 'purple', description: '衡量你对新事物和新体验的接受程度' },
+{ id: 'C', name: '尽责性', icon: 'fa-check-double', color: 'green', description: '衡量你的自律程度和目标导向性' },
+{ id: 'A', name: '宜人性', icon: 'fa-heart', color: 'pink', description: '衡量你在人际关系中的合作倾向' },
+{ id: 'N', name: '情绪稳定性', icon: 'fa-balance-scale', color: 'yellow', description: '衡量你应对压力和负面情绪的能力' },
+{ id: 'T', name: '思维风格', icon: 'fa-brain', color: 'cyan', description: '衡量你处理信息和做决策的方式' }
+],
+complex: [
+{ id: 'E', name: '外向性', icon: 'fa-users', color: 'blue', description: '衡量你在社交互动中的能量获取方式' },
+{ id: 'O', name: '开放性', icon: 'fa-lightbulb', color: 'purple', description: '衡量你对新事物和新体验的接受程度' },
+{ id: 'C', name: '尽责性', icon: 'fa-check-double', color: 'green', description: '衡量你的自律程度和目标导向性' },
+{ id: 'A', name: '宜人性', icon: 'fa-heart', color: 'pink', description: '衡量你在人际关系中的合作倾向' },
+{ id: 'N', name: '情绪稳定性', icon: 'fa-balance-scale', color: 'yellow', description: '衡量你应对压力和负面情绪的能力' },
+{ id: 'T', name: '思维风格', icon: 'fa-brain', color: 'cyan', description: '衡量你处理信息和做决策的方式' },
+{ id: 'Cr', name: '创造力', icon: 'fa-palette', color: 'orange', description: '衡量你的创新思维和艺术表达能力' },
+{ id: 'L', name: '领导力', icon: 'fa-crown', color: 'amber', description: '衡量你影响他人和带领团队的能力' },
+{ id: 'S', name: '社交能力', icon: 'fa-comments', color: 'teal', description: '衡量你建立和维护社交关系的能力' },
+{ id: 'Em', name: '同理心', icon: 'fa-hand-holding-heart', color: 'rose', description: '衡量你理解和感受他人情绪的能力' },
+{ id: 'P', name: '抗压能力', icon: 'fa-shield-alt', color: 'indigo', description: '衡量你在压力环境下的表现能力' },
+{ id: 'G', name: '成长心态', icon: 'fa-seedling', color: 'emerald', description: '衡量你面对挑战和持续学习的态度' }
+]
+};
+
+// 题库
+const questions = {
+simple: [
+// 外向性 (4题)
+{ dimension: 'E', text: '在社交聚会中，你通常会：', options: [
+{ text: '主动与陌生人交谈，享受结识新朋友', score: 5 },
+{ text: '与熟悉的朋友聊天，偶尔认识新人', score: 3 },
+{ text: '待在角落，等待别人来搭话', score: 1 }
+]},
+{ dimension: 'E', text: '周末时你更倾向于：', options: [
+{ text: '参加派对或集体活动', score: 5 },
+{ text: '与几个好友小聚', score: 3 },
+{ text: '独自在家放松', score: 1 }
+]},
+{ dimension: 'E', text: '在团队讨论中，你通常：', options: [
+{ text: '积极发言，分享想法', score: 5 },
+{ text: '适时表达意见', score: 3 },
+{ text: '更多时候倾听', score: 1 }
+]},
+{ dimension: 'E', text: '当你需要充电恢复精力时，你会：', options: [
+{ text: '与朋友外出活动', score: 5 },
+{ text: '看情况，有时独处有时社交', score: 3 },
+{ text: '独自安静地待着', score: 1 }
+]},
+
+// 开放性 (4题)
+{ dimension: 'O', text: '对于新的、不熟悉的事物，你的态度是：', options: [
+{ text: '充满好奇，迫不及待想尝试', score: 5 },
+{ text: '保持开放，谨慎尝试', score: 3 },
+{ text: '比较保守，偏好熟悉的事物', score: 1 }
+]},
+{ dimension: 'O', text: '你更喜欢哪种类型的活动：', options: [
+{ text: '探索新地方、尝试新美食', score: 5 },
+{ text: '偶尔尝试新事物', score: 3 },
+{ text: '坚持已知的喜好', score: 1 }
+]},
+{ dimension: 'O', text: '在艺术和文化方面：', options: [
+{ text: '我欣赏各种形式的艺术表达', score: 5 },
+{ text: '我对某些艺术形式感兴趣', score: 3 },
+{ text: '我更关注实用性而非艺术性', score: 1 }
+]},
+{ dimension: 'O', text: '面对不同的观点和价值观：', options: [
+{ text: '我乐于理解和接受差异', score: 5 },
+{ text: '我可以理解但可能不完全认同', score: 3 },
+{ text: '我倾向于坚持自己的观点', score: 1 }
+]},
+
+// 尽责性 (4题)
+{ dimension: 'C', text: '对于待办事项，你通常会：', options: [
+{ text: '制定详细计划并严格执行', score: 5 },
+{ text: '有个大致规划，灵活调整', score: 3 },
+{ text: '随性而为，想到什么做什么', score: 1 }
+]},
+{ dimension: 'C', text: '面对长期目标时：', options: [
+{ text: '我会坚持不懈地努力', score: 5 },
+{ text: '我会努力但有时会分心', score: 3 },
+{ text: '我容易被短期诱惑影响', score: 1 }
+]},
+{ dimension: 'C', text: '你的工作/学习环境通常是：', options: [
+{ text: '整洁有序，物品各有其位', score: 5 },
+{ text: '大致整洁，偶尔凌乱', score: 3 },
+{ text: '比较随意，创意性混乱', score: 1 }
+]},
+{ dimension: 'C', text: '对于截止日期：', options: [
+{ text: '我总是提前完成', score: 5 },
+{ text: '我会在截止前完成', score: 3 },
+{ text: '我经常在最后时刻赶工', score: 1 }
+]},
+
+// 宜人性 (4题)
+{ dimension: 'A', text: '当朋友需要帮助时：', options: [
+{ text: '我会毫不犹豫地伸出援手', score: 5 },
+{ text: '我会根据情况提供帮助', score: 3 },
+{ text: '我会先考虑自己的情况', score: 1 }
+]},
+{ dimension: 'A', text: '在冲突中，你倾向于：', options: [
+{ text: '寻求妥协，维护关系', score: 5 },
+{ text: '坚持原则但保持礼貌', score: 3 },
+{ text: '坚持自己的立场', score: 1 }
+]},
+{ dimension: 'A', text: '对于他人的错误：', options: [
+{ text: '我很容易原谅并理解', score: 5 },
+{ text: '我会根据情况判断', score: 3 },
+{ text: '我需要时间才能释怀', score: 1 }
+]},
+{ dimension: 'A', text: '你更看重：', options: [
+{ text: '和谐的人际关系', score: 5 },
+{ text: '公平与关系并重', score: 3 },
+{ text: '公正和原则', score: 1 }
+]},
+
+// 情绪稳定性 (4题)
+{ dimension: 'N', text: '面对压力时，你通常会：', options: [
+{ text: '保持冷静，理性应对', score: 5 },
+{ text: '有些焦虑但能处理', score: 3 },
+{ text: '感到明显的不适和焦虑', score: 1 }
+]},
+{ dimension: 'N', text: '当事情不如预期时：', options: [
+{ text: '我能快速调整心态', score: 5 },
+{ text: '我需要一些时间适应', score: 3 },
+{ text: '我会长时间感到沮丧', score: 1 }
+]},
+{ dimension: 'N', text: '你的情绪波动通常是：', options: [
+{ text: '相对稳定，起伏不大', score: 5 },
+{ text: '有时会有波动', score: 3 },
+{ text: '比较敏感，容易受影响', score: 1 }
+]},
+{ dimension: 'N', text: '在不确定的情况下：', options: [
+{ text: '我感到好奇和兴奋', score: 5 },
+{ text: '我有些紧张但能接受', score: 3 },
+{ text: '我感到不安和担忧', score: 1 }
+]},
+
+// 思维风格 (4题)
+{ dimension: 'T', text: '做重要决定时，你更依赖：', options: [
+{ text: '逻辑分析和客观数据', score: 5 },
+{ text: '理性与直觉的结合', score: 3 },
+{ text: '直觉和内心感受', score: 1 }
+]},
+{ dimension: 'T', text: '你更喜欢哪种学习方式：', options: [
+{ text: '系统性的理论和方法', score: 5 },
+{ text: '理论与实践结合', score: 3 },
+{ text: '动手实践和体验', score: 1 }
+]},
+{ dimension: 'T', text: '解决问题时，你倾向于：', options: [
+{ text: '分析所有可能的方案', score: 5 },
+{ text: '考虑几个主要选项', score: 3 },
+{ text: '快速选择感觉对的方案', score: 1 }
+]},
+{ dimension: 'T', text: '你更欣赏：', options: [
+{ text: '精确的逻辑推理', score: 5 },
+{ text: '逻辑与创意的平衡', score: 3 },
+{ text: '独特的创意想法', score: 1 }
+]}
+],
+
+complex: [
+// 外向性 (5题)
+{ dimension: 'E', text: '在大型社交场合中，你通常会感到：', options: [
+{ text: '充满活力，享受其中', score: 5 },
+{ text: '比较舒适，可以应对', score: 4 },
+{ text: '有些疲惫但还行', score: 3 },
+{ text: '相当消耗精力', score: 2 },
+{ text: '非常疲惫，想尽快离开', score: 1 }
+]},
+{ dimension: 'E', text: '当你有想法要表达时：', options: [
+{ text: '我会立即说出来', score: 5 },
+{ text: '我会找合适的时机说', score: 4 },
+{ text: '我会等待被问到再说', score: 3 },
+{ text: '我会犹豫要不要说', score: 2 },
+{ text: '我通常保持沉默', score: 1 }
+]},
+{ dimension: 'E', text: '对于认识新朋友：', options: [
+{ text: '我非常享受这个过程', score: 5 },
+{ text: '我比较积极主动', score: 4 },
+{ text: '我可以接受但不主动', score: 3 },
+{ text: '我有些抗拒', score: 2 },
+{ text: '我尽量避免', score: 1 }
+]},
+{ dimension: 'E', text: '在团队合作中，你更倾向于：', options: [
+{ text: '担任领导者或协调者', score: 5 },
+{ text: '积极参与讨论', score: 4 },
+{ text: '完成自己的部分', score: 3 },
+{ text: '配合他人工作', score: 2 },
+{ text: '独立完成分配的任务', score: 1 }
+]},
+{ dimension: 'E', text: '你更喜欢哪种休闲方式：', options: [
+{ text: '参加大型聚会或活动', score: 5 },
+{ text: '与一群朋友外出', score: 4 },
+{ text: '与几个好友小聚', score: 3 },
+{ text: '与一两个朋友相处', score: 2 },
+{ text: '独自享受安静时光', score: 1 }
+]},
+
+// 开放性 (5题)
+{ dimension: 'O', text: '对于前卫的艺术形式（如抽象画、实验音乐）：', options: [
+{ text: '我非常欣赏和感兴趣', score: 5 },
+{ text: '我持开放态度去了解', score: 4 },
+{ text: '有些我能接受', score: 3 },
+{ text: '大部分不太能理解', score: 2 },
+{ text: '我不太感兴趣', score: 1 }
+]},
+{ dimension: 'O', text: '当遇到与自己完全不同的观点时：', options: [
+{ text: '我很好奇想深入了解', score: 5 },
+{ text: '我愿意倾听和理解', score: 4 },
+{ text: '我会保持尊重但坚持己见', score: 3 },
+{ text: '我有些难以接受', score: 2 },
+{ text: '我认为是错误的', score: 1 }
+]},
+{ dimension: 'O', text: '对于生活中的变化：', options: [
+{ text: '我主动寻求变化', score: 5 },
+{ text: '我欢迎积极的变化', score: 4 },
+{ text: '我可以适应变化', score: 3 },
+{ text: '我对变化有些抗拒', score: 2 },
+{ text: '我更喜欢稳定不变', score: 1 }
+]},
+{ dimension: 'O', text: '在思考问题时：', options: [
+{ text: '我喜欢探索各种可能性', score: 5 },
+{ text: '我会考虑多种角度', score: 4 },
+{ text: '我会权衡几个主要选项', score: 3 },
+{ text: '我倾向于找标准答案', score: 2 },
+{ text: '我喜欢明确的解决方案', score: 1 }
+]},
+{ dimension: 'O', text: '你对外国文化和异国风情的态度：', options: [
+{ text: '非常着迷，想深入了解', score: 5 },
+{ text: '很感兴趣，愿意体验', score: 4 },
+{ text: '有些好奇', score: 3 },
+{ text: '兴趣一般', score: 2 },
+{ text: '更喜欢本国文化', score: 1 }
+]},
+
+// 尽责性 (5题)
+{ dimension: 'C', text: '对于日常计划和安排：', options: [
+{ text: '我有详细的日程规划', score: 5 },
+{ text: '我有大致的计划', score: 4 },
+{ text: '我有一些基本安排', score: 3 },
+{ text: '我很少做计划', score: 2 },
+{ text: '我完全随性而为', score: 1 }
+]},
+{ dimension: 'C', text: '当需要完成一项重要任务时：', options: [
+{ text: '我会立即开始并提前完成', score: 5 },
+{ text: '我会制定计划按时完成', score: 4 },
+{ text: '我会按时完成', score: 3 },
+{ text: '我会在截止前完成', score: 2 },
+{ text: '我经常拖延到最后一刻', score: 1 }
+]},
+{ dimension: 'C', text: '对于自己的承诺：', options: [
+{ text: '我从不食言', score: 5 },
+{ text: '我几乎总是信守承诺', score: 4 },
+{ text: '我大多数时候会遵守', score: 3 },
+{ text: '我有时会忘记或改变', score: 2 },
+{ text: '我经常无法兑现', score: 1 }
+]},
+{ dimension: 'C', text: '你的个人物品通常：', options: [
+{ text: '非常整洁，井井有条', score: 5 },
+{ text: '比较整齐有序', score: 4 },
+{ text: '大致整洁', score: 3 },
+{ text: '有些凌乱', score: 2 },
+{ text: '相当混乱', score: 1 }
+]},
+{ dimension: 'C', text: '对于长期目标：', options: [
+{ text: '我有清晰的目标并持续努力', score: 5 },
+{ text: '我有目标并定期检查进度', score: 4 },
+{ text: '我有目标但进展不稳定', score: 3 },
+{ text: '我的目标经常改变', score: 2 },
+{ text: '我没有明确的目标', score: 1 }
+]},
+
+// 宜人性 (5题)
+{ dimension: 'A', text: '当别人向你倾诉烦恼时：', options: [
+{ text: '我全心全意地倾听和帮助', score: 5 },
+{ text: '我会尽力提供支持', score: 4 },
+{ text: '我会倾听并给一些建议', score: 3 },
+{ text: '我会听但不知如何回应', score: 2 },
+{ text: '我有些不知所措', score: 1 }
+]},
+{ dimension: 'A', text: '对于竞争与合作：', options: [
+{ text: '我更倾向于合作共赢', score: 5 },
+{ text: '我偏好合作但接受竞争', score: 4 },
+{ text: '我看情况选择', score: 3 },
+{ text: '我有些竞争意识', score: 2 },
+{ text: '我喜欢竞争和赢', score: 1 }
+]},
+{ dimension: 'A', text: '当有人批评你时：', options: [
+{ text: '我虚心接受并反思', score: 5 },
+{ text: '我会认真考虑', score: 4 },
+{ text: '我会听但可能不认同', score: 3 },
+{ text: '我会为自己辩护', score: 2 },
+{ text: '我感到受伤或愤怒', score: 1 }
+]},
+{ dimension: 'A', text: '你更相信：', options: [
+{ text: '大多数人都是善良的', score: 5 },
+{ text: '大部分人值得信任', score: 4 },
+{ text: '需要时间建立信任', score: 3 },
+{ text: '对陌生人保持警惕', score: 2 },
+{ text: '人心难测，要小心', score: 1 }
+]},
+{ dimension: 'A', text: '在团队决策中：', options: [
+{ text: '我优先考虑大家的需求', score: 5 },
+{ text: '我寻求各方平衡', score: 4 },
+{ text: '我关注公平性', score: 3 },
+{ text: '我坚持自己的立场', score: 2 },
+{ text: '我优先考虑自己的利益', score: 1 }
+]},
+
+// 情绪稳定性 (5题)
+{ dimension: 'N', text: '当你面临重大压力时：', options: [
+{ text: '我能保持冷静和专注', score: 5 },
+{ text: '我有些紧张但能应对', score: 4 },
+{ text: '我需要一些时间调整', score: 3 },
+{ text: '我感到明显的焦虑', score: 2 },
+{ text: '我几乎无法正常运作', score: 1 }
+]},
+{ dimension: 'N', text: '对于未来的不确定性：', options: [
+{ text: '我感到好奇和期待', score: 5 },
+{ text: '我能接受并适应', score: 4 },
+{ text: '我有些担忧但能面对', score: 3 },
+{ text: '我感到不安', score: 2 },
+{ text: '我非常焦虑和恐惧', score: 1 }
+]},
+{ dimension: 'N', text: '当你犯错时：', options: [
+{ text: '我坦然接受并学习', score: 5 },
+{ text: '我能接受并改进', score: 4 },
+{ text: '我有些自责', score: 3 },
+{ text: '我会反复思考', score: 2 },
+{ text: '我很难释怀', score: 1 }
+]},
+{ dimension: 'N', text: '你的情绪变化通常是：', options: [
+{ text: '非常稳定，起伏很小', score: 5 },
+{ text: '比较平稳', score: 4 },
+{ text: '有一定波动', score: 3 },
+{ text: '波动比较明显', score: 2 },
+{ text: '起伏很大，难以预测', score: 1 }
+]},
+{ dimension: 'N', text: '面对挫折时：', options: [
+{ text: '我很快就能振作起来', score: 5 },
+{ text: '我能较快恢复', score: 4 },
+{ text: '我需要一些时间', score: 3 },
+{ text: '我会消沉一段时间', score: 2 },
+{ text: '我很难走出阴影', score: 1 }
+]},
+
+// 思维风格 (5题)
+{ dimension: 'T', text: '做重要决定时，你更依赖：', options: [
+{ text: '全面的数据和逻辑分析', score: 5 },
+{ text: '理性分析为主，直觉为辅', score: 4 },
+{ text: '理性与直觉各半', score: 3 },
+{ text: '直觉为主，理性为辅', score: 2 },
+{ text: '主要依靠直觉和感受', score: 1 }
+]},
+{ dimension: 'T', text: '你更喜欢哪种工作方式：', options: [
+{ text: '有明确的规则和流程', score: 5 },
+{ text: '有框架但允许灵活', score: 4 },
+{ text: '有一定的自由度', score: 3 },
+{ text: '较大的创造空间', score: 2 },
+{ text: '完全自由发挥', score: 1 }
+]},
+{ dimension: 'T', text: '学习新知识时：', options: [
+{ text: '我喜欢系统性的课程', score: 5 },
+{ text: '我喜欢有结构的学习', score: 4 },
+{ text: '我可以接受不同方式', score: 3 },
+{ text: '我更喜欢探索式学习', score: 2 },
+{ text: '我喜欢在实践中学习', score: 1 }
+]},
+{ dimension: 'T', text: '你认为成功更多取决于：', options: [
+{ text: '周密的计划和执行', score: 5 },
+{ text: '努力和机遇的结合', score: 4 },
+{ text: '个人能力和运气', score: 3 },
+{ text: '抓住机会的能力', score: 2 },
+{ text: '灵感和时机', score: 1 }
+]},
+{ dimension: 'T', text: '你更欣赏哪种表达方式：', options: [
+{ text: '精确、逻辑清晰', score: 5 },
+{ text: '清晰有条理', score: 4 },
+{ text: '真诚有内容', score: 3 },
+{ text: '生动有趣', score: 2 },
+{ text: '富有感染力和想象力', score: 1 }
+]},
+
+// 创造力 (5题)
+{ dimension: 'Cr', text: '当你需要解决问题时：', options: [
+{ text: '我喜欢想出独特的方案', score: 5 },
+{ text: '我会尝试新的方法', score: 4 },
+{ text: '我会结合新旧方法', score: 3 },
+{ text: '我倾向于用已知方法', score: 2 },
+{ text: '我遵循标准流程', score: 1 }
+]},
+{ dimension: 'Cr', text: '对于艺术创作活动（绘画、音乐、写作等）：', options: [
+{ text: '我经常参与并乐在其中', score: 5 },
+{ text: '我有时会尝试', score: 4 },
+{ text: '我偶尔感兴趣', score: 3 },
+{ text: '我很少参与', score: 2 },
+{ text: '我不太感兴趣', score: 1 }
+]},
+{ dimension: 'Cr', text: '你的想法通常是：', options: [
+{ text: '非常独特和原创', score: 5 },
+{ text: '有新意的', score: 4 },
+{ text: '中规中矩的', score: 3 },
+{ text: '比较传统的', score: 2 },
+{ text: '很常规的', score: 1 }
+]},
+{ dimension: 'Cr', text: '对于"打破常规"：', options: [
+{ text: '我经常这样做', score: 5 },
+{ text: '我在适当时候会', score: 4 },
+{ text: '我偶尔会尝试', score: 3 },
+{ text: '我很少这样做', score: 2 },
+{ text: '我从不这样做', score: 1 }
+]},
+{ dimension: 'Cr', text: '在头脑风暴中：', options: [
+{ text: '我能提出很多创意点子', score: 5 },
+{ text: '我能贡献一些想法', score: 4 },
+{ text: '我能提出一些观点', score: 3 },
+{ text: '我更多是倾听', score: 2 },
+{ text: '我很难想出新点子', score: 1 }
+]},
+
+// 领导力 (5题)
+{ dimension: 'L', text: '当团队需要有人负责时：', options: [
+{ text: '我会主动站出来', score: 5 },
+{ text: '我会积极考虑', score: 4 },
+{ text: '如果需要我可以', score: 3 },
+{ text: '我更愿意配合', score: 2 },
+{ text: '我不想承担责任', score: 1 }
+]},
+{ dimension: 'L', text: '你影响他人的方式通常是：', options: [
+{ text: '激励和鼓舞', score: 5 },
+{ text: '说服和引导', score: 4 },
+{ text: '沟通和协商', score: 3 },
+{ text: '请求和建议', score: 2 },
+{ text: '我很少试图影响他人', score: 1 }
+]},
+{ dimension: 'L', text: '面对团队冲突：', options: [
+{ text: '我能有效调解并解决', score: 5 },
+{ text: '我能帮助缓解', score: 4 },
+{ text: '我会尝试处理', score: 3 },
+{ text: '我会寻求帮助', score: 2 },
+{ text: '我倾向于回避', score: 1 }
+]},
+{ dimension: 'L', text: '对于承担责任：', options: [
+{ text: '我乐于承担重大责任', score: 5 },
+{ text: '我愿意承担责任', score: 4 },
+{ text: '我可以接受责任', score: 3 },
+{ text: '我有些犹豫', score: 2 },
+{ text: '我尽量避免', score: 1 }
+]},
+{ dimension: 'L', text: '你做决策时：', options: [
+{ text: '果断且自信', score: 5 },
+{ text: '比较果断', score: 4 },
+{ text: '会考虑后决定', score: 3 },
+{ text: '会犹豫不决', score: 2 },
+{ text: '很难做出决定', score: 1 }
+]},
+
+// 社交能力 (5题)
+{ dimension: 'S', text: '在社交场合中建立新关系：', options: [
+{ text: '对我来说很容易', score: 5 },
+{ text: '我比较擅长', score: 4 },
+{ text: '我可以做到', score: 3 },
+{ text: '我有些困难', score: 2 },
+{ text: '我非常困难', score: 1 }
+]},
+{ dimension: 'S', text: '你维持友谊的方式：', options: [
+{ text: '主动联系和安排聚会', score: 5 },
+{ text: '经常保持联系', score: 4 },
+{ text: '定期联系', score: 3 },
+{ text: '偶尔联系', score: 2 },
+{ text: '很少主动联系', score: 1 }
+]},
+{ dimension: 'S', text: '理解他人的社交暗示：', options: [
+{ text: '我非常敏锐', score: 5 },
+{ text: '我比较擅长', score: 4 },
+{ text: '我能基本理解', score: 3 },
+{ text: '我有时会误解', score: 2 },
+{ text: '我经常误解', score: 1 }
+]},
+{ dimension: 'S', text: '在社交网络中的角色：', options: [
+{ text: '我是连接不同圈子的桥梁', score: 5 },
+{ text: '我有广泛的社交圈', score: 4 },
+{ text: '我有稳定的社交圈', score: 3 },
+{ text: '我的社交圈较小', score: 2 },
+{ text: '我几乎没有社交圈', score: 1 }
+]},
+{ dimension: 'S', text: '处理人际关系的复杂情况：', options: [
+{ text: '我游刃有余', score: 5 },
+{ text: '我能较好处理', score: 4 },
+{ text: '我能应对', score: 3 },
+{ text: '我有些吃力', score: 2 },
+{ text: '我非常困难', score: 1 }
+]},
+
+// 同理心 (5题)
+{ dimension: 'Em', text: '当看到他人难过时：', options: [
+{ text: '我能深切感受到他们的情绪', score: 5 },
+{ text: '我能理解并感同身受', score: 4 },
+{ text: '我能理解他们的感受', score: 3 },
+{ text: '我能意识到但不太能感受', score: 2 },
+{ text: '我很难理解他们的感受', score: 1 }
+]},
+{ dimension: 'Em', text: '在倾听他人时：', options: [
+{ text: '我完全投入他们的世界', score: 5 },
+{ text: '我能深刻理解他们的处境', score: 4 },
+{ text: '我能理解他们的观点', score: 3 },
+{ text: '我在听但有时会分心', score: 2 },
+{ text: '我很难集中注意力', score: 1 }
+]},
+{ dimension: 'Em', text: '对于他人的非语言表达：', options: [
+{ text: '我能准确解读', score: 5 },
+{ text: '我能较好理解', score: 4 },
+{ text: '我能基本识别', score: 3 },
+{ text: '我有时能注意到', score: 2 },
+{ text: '我经常忽略', score: 1 }
+]},
+{ dimension: 'Em', text: '当你关心的人开心时：', options: [
+{ text: '我也会感到非常开心', score: 5 },
+{ text: '我会为他们高兴', score: 4 },
+{ text: '我会感到愉快', score: 3 },
+{ text: '我会为他们感到好', score: 2 },
+{ text: '我没有特别的感觉', score: 1 }
+]},
+{ dimension: 'Em', text: '在争论中理解对方立场：', options: [
+{ text: '即使不同意我也能完全理解', score: 5 },
+{ text: '我能较好理解', score: 4 },
+{ text: '我能理解主要观点', score: 3 },
+{ text: '我有些困难', score: 2 },
+{ text: '我很难理解', score: 1 }
+]},
+
+// 抗压能力 (5题)
+{ dimension: 'P', text: '在高压环境下工作：', options: [
+{ text: '我能保持高效', score: 5 },
+{ text: '我能较好应对', score: 4 },
+{ text: '我能正常工作', score: 3 },
+{ text: '我的效率会下降', score: 2 },
+{ text: '我几乎无法工作', score: 1 }
+]},
+{ dimension: 'P', text: '面对突发危机：', options: [
+{ text: '我能冷静处理', score: 5 },
+{ text: '我能较快调整', score: 4 },
+{ text: '我能应对', score: 3 },
+{ text: '我会有些慌乱', score: 2 },
+{ text: '我会非常紧张', score: 1 }
+]},
+{ dimension: 'P', text: '当同时面对多个任务时：', options: [
+{ text: '我能从容应对', score: 5 },
+{ text: '我能较好管理', score: 4 },
+{ text: '我能处理', score: 3 },
+{ text: '我会感到压力', score: 2 },
+{ text: '我会不堪重负', score: 1 }
+]},
+{ dimension: 'P', text: '失败后你的恢复速度：', options: [
+{ text: '非常快，立即振作', score: 5 },
+{ text: '较快恢复', score: 4 },
+{ text: '需要一些时间', score: 3 },
+{ text: '恢复较慢', score: 2 },
+{ text: '很难恢复', score: 1 }
+]},
+{ dimension: 'P', text: '面对批评和否定：', options: [
+{ text: '我能客观看待并成长', score: 5 },
+{ text: '我能接受并改进', score: 4 },
+{ text: '我能接受但会难过', score: 3 },
+{ text: '我会感到受伤', score: 2 },
+{ text: '我会深受打击', score: 1 }
+]},
+
+// 成长心态 (5题)
+{ dimension: 'G', text: '对于新的挑战：', options: [
+{ text: '我积极迎接并期待成长', score: 5 },
+{ text: '我愿意尝试', score: 4 },
+{ text: '我会考虑后决定', score: 3 },
+{ text: '我有些犹豫', score: 2 },
+{ text: '我倾向于回避', score: 1 }
+]},
+{ dimension: 'G', text: '当遇到不擅长的事情：', options: [
+{ text: '我相信通过努力可以提高', score: 5 },
+{ text: '我愿意学习和改进', score: 4 },
+{ text: '我会尝试提升', score: 3 },
+{ text: '我可能放弃', score: 2 },
+{ text: '我认为无法改变', score: 1 }
+]},
+{ dimension: 'G', text: '对于反馈和建议：', options: [
+{ text: '我非常欢迎并积极采纳', score: 5 },
+{ text: '我乐于接受', score: 4 },
+{ text: '我会考虑', score: 3 },
+{ text: '我有些抵触', score: 2 },
+{ text: '我不太接受', score: 1 }
+]},
+{ dimension: 'G', text: '你认为能力是：', options: [
+{ text: '可以通过努力不断发展', score: 5 },
+{ text: '可以提升的', score: 4 },
+{ text: '部分可以改变', score: 3 },
+{ text: '大部分是天生的', score: 2 },
+{ text: '固定不变的', score: 1 }
+]},
+{ dimension: 'G', text: '面对困难任务时：', options: [
+{ text: '我视为学习成长的机会', score: 5 },
+{ text: '我愿意挑战自己', score: 4 },
+{ text: '我会尝试完成', score: 3 },
+{ text: '我会有些退缩', score: 2 },
+{ text: '我会尽量避免', score: 1 }
+]}
+]
+};
+
+// 职业推荐数据
+const careerRecommendations = {
+high_E: ['销售经理', '公关专员', '活动策划', '企业培训师', '市场推广', '演员/主持人', '人力资源经理', '客户关系管理'],
+low_E: ['数据分析师', '程序员', '作家/编辑', '研究员', '会计师', '图书管理员', '实验室技术员', '独立顾问'],
+high_O: ['设计师', '艺术家', '产品经理', '广告创意', '建筑师', '音乐家', '发明家', '文化策划'],
+low_O: ['会计师', '审计师', '行政助理', '数据录入员', '质检员', '档案管理员', '银行柜员', '税务专员'],
+high_C: ['项目经理', '运营总监', '律师', '医生', '财务总监', '质量管理', '审计师', '工程管理'],
+low_C: ['自由职业者', '创意工作者', '艺术家', '旅游顾问', '活动策划助理', '零售销售', '服务行业'],
+high_A: ['心理咨询师', '社工', '护士', '教师', '客户服务', '人力资源', '非营利组织工作', '调解员'],
+low_A: ['法官', '科学家', '程序员', '财务分析师', '投资银行家', '管理顾问', '创业家', '竞争性销售'],
+high_N_stable: ['危机管理', '急诊医生', '消防员', '航空管制员', '投资交易员', '记者', '公关危机处理', '手术医生'],
+high_N_sensitive: ['艺术家', '作家', '心理咨询', '音乐治疗', '创意工作', '人文研究', '护理工作', '社会工作'],
+high_T: ['科学家', '工程师', '程序员', '数据分析师', '金融分析师', '律师', '医生', '系统架构师'],
+low_T: ['艺术家', '演员', '音乐家', '设计师', '心理咨询师', '社会工作者', '教师', '创意总监'],
+high_Cr: ['设计师', '艺术家', '广告创意', '产品设计师', '游戏设计师', '建筑师', '作家', '导演'],
+high_L: ['CEO', '创业者', '项目经理', '团队领导', '政治家', '高管', '运动教练', '军事指挥'],
+high_S: ['销售总监', '公关经理', '人力资源总监', '活动策划', '客户关系', '商务拓展', '外交官', '社区管理'],
+high_Em: ['心理咨询师', '社工', '护士', '医生', '教师', '人力资源', '客户服务', '治疗师'],
+high_P: ['急诊医生', '消防员', '航空管制', '危机公关', '投资交易', '记者', '手术医生', '军事指挥'],
+high_G: ['创业者', '研究员', '产品经理', '战略顾问', '学习发展专家', '创新经理', '转型顾问', '教育工作者']
+};
+
+// 爱好推荐
+const hobbyRecommendations = {
+high_E: ['团队运动', '社交舞蹈', '派对策划', '志愿服务', '演讲俱乐部', '旅行团', '合唱团', '社团活动'],
+low_E: ['阅读', '写作', '绘画', '园艺', '瑜伽', '冥想', '独自旅行', '拼图/数独'],
+high_O: ['艺术创作', '旅行探索', '学习新语言', '摄影', '音乐演奏', '烹饪实验', '参观展览', '创意写作'],
+low_O: ['收藏', '传统手工艺', '棋类游戏', '历史研究', '经典阅读', '园艺', '钓鱼', '传统音乐'],
+high_C: ['健身计划', '时间管理', '学习新技能', '志愿服务', '整理收纳', '目标设定', '投资理财', '自我提升课程'],
+low_C: ['即兴旅行', '休闲游戏', '看电影', '听音乐', '社交聚会', '美食探索', '放松活动', '随意阅读'],
+high_A: ['志愿服务', '帮助他人', '社区活动', '动物救助', '慈善活动', '团队活动', '教学辅导', '互助小组'],
+low_A: ['竞技运动', '棋类比赛', '个人项目', '技能提升', '独立研究', '个人挑战', '策略游戏', '个人创作'],
+high_Cr: ['绘画/雕塑', '音乐创作', '写作', '摄影', '手工艺', '烹饪', '园艺设计', 'DIY项目'],
+high_L: ['团队领导', '志愿管理', '组织活动', '公开演讲', '指导他人', '俱乐部管理', '社区领导', '教练工作'],
+high_S: ['社交活动', '俱乐部', '志愿服务', '团队运动', '社区活动', '网络社交', '派对策划', '旅行团'],
+high_Em: ['志愿服务', '帮助他人', '心理咨询学习', '动物救助', '艺术治疗', '阅读心理学', '支持小组', '护理工作'],
+high_P: ['极限运动', '挑战活动', '冥想', '健身', '武术', '户外探险', '竞争性运动', '压力管理课程'],
+high_G: ['学习新技能', '读书', '参加课程', '挑战新事物', '旅行', '研究项目', '导师计划', '自我反思']
+};
+
+// ==================== 状态管理 ====================
+let currentMode = 'simple';
+let currentQuestionIndex = 0;
+let answers = {};
+let scores = {};
+
+// ==================== 页面切换 ====================
+function showPage(pageId) {
+document.getElementById('home-page').classList.add('hidden');
+document.getElementById('test-page').classList.add('hidden');
+document.getElementById('result-page').classList.add('hidden');
+document.getElementById(pageId).classList.remove('hidden');
+window.scrollTo(0, 0);
+}
+
+// ==================== 开始测试 ====================
+function startTest(mode) {
+currentMode = mode;
+currentQuestionIndex = 0;
+answers = {};
+scores = {};
+
+// 初始化分数
+dimensions[mode].forEach(dim => {
+scores[dim.id] = 0;
+});
+
+showPage('test-page');
+renderQuestion();
+}
+
+// ==================== 渲染题目 ====================
+function renderQuestion() {
+const questionData = questions[currentMode][currentQuestionIndex];
+const totalQuestions = questions[currentMode].length;
+
+// 更新进度
+document.getElementById('progress-text').textContent = `${currentQuestionIndex + 1} / ${totalQuestions}`;
+document.getElementById('progress-bar').style.width = `${((currentQuestionIndex + 1) / totalQuestions) * 100}%`;
+
+// 更新维度标签
+const dimension = dimensions[currentMode].find(d => d.id === questionData.dimension);
+document.getElementById('dimension-badge').innerHTML = `
+<i class="fas ${dimension.icon}"></i>
+<span>${dimension.name}</span>
+`;
+
+// 更新题目
+document.getElementById('question-text').textContent = questionData.text;
+
+// 渲染选项
+const optionsContainer = document.getElementById('options-container');
+optionsContainer.innerHTML = questionData.options.map((option, index) => `
+<button class="option-btn w-full p-4 rounded-xl border border-white/20 text-left hover:border-primary-400 transition-all flex items-center gap-4 ${answers[currentQuestionIndex] === index ? 'selected' : ''}" onclick="selectOption(${index})">
+<span class="w-8 h-8 rounded-full border border-current flex items-center justify-center text-sm font-medium shrink-0">
+${String.fromCharCode(65 + index)}
+</span>
+<span class="text-gray-200">${option.text}</span>
+</button>
+`).join('');
+
+// 更新按钮状态
+document.getElementById('prev-btn').disabled = currentQuestionIndex === 0;
+updateNextButton();
+}
+
+// ==================== 选择选项 ====================
+function selectOption(index) {
+answers[currentQuestionIndex] = index;
+renderQuestion();
+}
+
+// ==================== 更新下一题按钮 ====================
+function updateNextButton() {
+const nextBtn = document.getElementById('next-btn');
+const hasAnswer = answers[currentQuestionIndex] !== undefined;
+nextBtn.disabled = !hasAnswer;
+
+if (currentQuestionIndex === questions[currentMode].length - 1 && hasAnswer) {
+nextBtn.innerHTML = `<span>查看结果</span><i class="fas fa-chart-pie"></i>`;
+} else {
+nextBtn.innerHTML = `<span>下一题</span><i class="fas fa-arrow-right"></i>`;
+}
+}
+
+// ==================== 上一题 ====================
+function prevQuestion() {
+if (currentQuestionIndex > 0) {
+currentQuestionIndex--;
+renderQuestion();
+}
+}
+
+// ==================== 下一题 ====================
+function nextQuestion() {
+if (answers[currentQuestionIndex] === undefined) return;
+
+if (currentQuestionIndex < questions[currentMode].length - 1) {
+currentQuestionIndex++;
+renderQuestion();
+} else {
+calculateResults();
+}
+}
+
+// ==================== 计算结果 ====================
+function calculateResults() {
+// 计算各维度分数
+questions[currentMode].forEach((q, index) => {
+if (answers[index] !== undefined) {
+scores[q.dimension] += q.options[answers[index]].score;
+}
+});
+
+// 归一化分数到0-100
+const maxPossible = currentMode === 'simple' ? 20 : 25;
+Object.keys(scores).forEach(key => {
+scores[key] = Math.round((scores[key] / maxPossible) * 100);
+});
+
+showPage('result-page');
+renderResults();
+}
+
+// ==================== 渲染结果 ====================
+function renderResults() {
+const resultContent = document.getElementById('result-content');
+const dims = dimensions[currentMode];
+
+// 生成雷达图数据
+const radarPoints = dims.map((dim, i) => {
+const angle = (i * 360 / dims.length - 90) * Math.PI / 180;
+const radius = (scores[dim.id] / 100) * 120;
+return {
+x: 150 + radius * Math.cos(angle),
+y: 150 + radius * Math.sin(angle)
+};
+});
+
+const radarPath = radarPoints.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ') + ' Z';
+
+resultContent.innerHTML = `
+<!-- 性格类型 -->
+<div class="glass rounded-3xl p-8 slide-up">
+<div class="flex flex-col md:flex-row items-center gap-8">
+<div class="w-32 h-32 rounded-full bg-gradient-to-br from-primary-400 to-cyan-400 flex items-center justify-center shrink-0">
+<i class="fas fa-user-astronaut text-5xl text-white"></i>
+</div>
+<div class="text-center md:text-left">
+<h2 class="text-3xl font-bold mb-2">${getPersonalityType()}</h2>
+<p class="text-gray-400 text-lg">${getPersonalityDescription()}</p>
+</div>
+</div>
+</div>
+
+<!-- 雷达图 -->
+<div class="glass rounded-3xl p-8 slide-up" style="animation-delay: 0.1s;">
+<h3 class="text-xl font-bold mb-6 flex items-center gap-3">
+<i class="fas fa-chart-radar text-primary-400"></i>
+性格维度分析
+</h3>
+<div class="flex flex-col lg:flex-row items-center gap-8">
+<div class="shrink-0">
+<svg width="300" height="300" viewBox="0 0 300 300" class="radar-chart">
+<!-- 背景网格 -->
+${[20, 40, 60, 80, 100].map(percent => {
+const r = percent * 1.2;
+return `<polygon class="radar-bg" points="${dims.map((_, i) => {
+const angle = (i * 360 / dims.length - 90) * Math.PI / 180;
+return `${150 + r * Math.cos(angle)},${150 + r * Math.sin(angle)}`;
+}).join(' ')}"/>`;
+}).join('')}
+<!-- 轴线 -->
+${dims.map((_, i) => {
+const angle = (i * 360 / dims.length - 90) * Math.PI / 180;
+return `<line x1="150" y1="150" x2="${150 + 144 * Math.cos(angle)}" y2="${150 + 144 * Math.sin(angle)}" stroke="rgba(255,255,255,0.1)"/>`;
+}).join('')}
+<!-- 数据区域 -->
+<path class="radar-data" d="${radarPath}"/>
+<!-- 数据点 -->
+${radarPoints.map(p => `<circle class="radar-point" cx="${p.x}" cy="${p.y}" r="5"/>`).join('')}
+<!-- 标签 -->
+${dims.map((dim, i) => {
+const angle = (i * 360 / dims.length - 90) * Math.PI / 180;
+const labelR = 165;
+return `<text x="${150 + labelR * Math.cos(angle)}" y="${150 + labelR * Math.sin(angle)}" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="12" font-weight="500">${dim.name}</text>`;
+}).join('')}
+</svg>
+</div>
+<div class="flex-1 space-y-4 w-full">
+${dims.map(dim => `
+<div>
+<div class="flex justify-between mb-1">
+<span class="text-gray-300">${dim.name}</span>
+<span class="text-white font-medium">${scores[dim.id]}%</span>
+</div>
+<div class="h-2 bg-white/10 rounded-full overflow-hidden">
+<div class="h-full rounded-full transition-all duration-1000" style="width: ${scores[dim.id]}%; background: linear-gradient(90deg, #0ea5e9, #06b6d4);"></div>
+</div>
+</div>
+`).join('')}
+</div>
+</div>
+</div>
+
+<!-- 详细分析 -->
+<div class="grid md:grid-cols-2 gap-6">
+${dims.map((dim, i) => `
+<div class="glass rounded-2xl p-6 slide-up" style="animation-delay: ${0.1 + i * 0.05}s;">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-400 to-cyan-400 flex items-center justify-center">
+<i class="fas ${dim.icon} text-white"></i>
+</div>
+<div>
+<h4 class="font-semibold">${dim.name}</h4>
+<p class="text-sm text-gray-400">${getLevelText(scores[dim.id])}</p>
+</div>
+</div>
+<p class="text-gray-300 text-sm leading-relaxed">${getDimensionAnalysis(dim.id, scores[dim.id])}</p>
+</div>
+`).join('')}
+</div>
+
+<!-- 职业推荐 -->
+<div class="glass rounded-3xl p-8 slide-up" style="animation-delay: 0.3s;">
+<h3 class="text-xl font-bold mb-6 flex items-center gap-3">
+<i class="fas fa-briefcase text-accent-400"></i>
+职业倾向推荐
+</h3>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+${getCareerRecommendations().map(career => `
+<div class="p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors cursor-default">
+<i class="fas fa-star text-accent-400 mr-2"></i>
+<span class="text-gray-200">${career}</span>
+</div>
+`).join('')}
+</div>
+</div>
+
+<!-- 爱好推荐 -->
+<div class="glass rounded-3xl p-8 slide-up" style="animation-delay: 0.35s;">
+<h3 class="text-xl font-bold mb-6 flex items-center gap-3">
+<i class="fas fa-heart text-pink-400"></i>
+适合的爱好活动
+</h3>
+<div class="flex flex-wrap gap-3">
+${getHobbyRecommendations().map(hobby => `
+<span class="px-4 py-2 rounded-full bg-gradient-to-r from-pink-500/20 to-purple-500/20 text-gray-200 border border-pink-500/30 hover:border-pink-400 transition-colors cursor-default">
+${hobby}
+</span>
+`).join('')}
+</div>
+</div>
+
+<!-- 未来建议 -->
+<div class="glass rounded-3xl p-8 slide-up" style="animation-delay: 0.4s;">
+<h3 class="text-xl font-bold mb-6 flex items-center gap-3">
+<i class="fas fa-compass text-emerald-400"></i>
+未来发展建议
+</h3>
+<div class="space-y-4">
+${getFutureRecommendations().map((rec, i) => `
+<div class="flex gap-4 p-4 rounded-xl bg-white/5">
+<div class="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0">
+<span class="text-emerald-400 font-medium">${i + 1}</span>
+</div>
+<p class="text-gray-300 leading-relaxed">${rec}</p>
+</div>
+`).join('')}
+</div>
+</div>
+
+<!-- 性格优势 -->
+<div class="glass rounded-3xl p-8 slide-up" style="animation-delay: 0.45s;">
+<h3 class="text-xl font-bold mb-6 flex items-center gap-3">
+<i class="fas fa-medal text-yellow-400"></i>
+你的核心优势
+</h3>
+<div class="grid sm:grid-cols-2 gap-4">
+${getStrengths().map(strength => `
+<div class="flex items-center gap-3 p-4 rounded-xl bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/20">
+<i class="fas fa-check-circle text-yellow-400"></i>
+<span class="text-gray-200">${strength}</span>
+</div>
+`).join('')}
+</div>
+</div>
+
+<!-- 成长方向 -->
+<div class="glass rounded-3xl p-8 slide-up" style="animation-delay: 0.5s;">
+<h3 class="text-xl font-bold mb-6 flex items-center gap-3">
+<i class="fas fa-seedling text-green-400"></i>
+可以提升的方向
+</h3>
+<div class="grid sm:grid-cols-2 gap-4">
+${getGrowthAreas().map(area => `
+<div class="flex items-center gap-3 p-4 rounded-xl bg-gradient-to-r from-green-500/10 to-teal-500/10 border border-green-500/20">
+<i class="fas fa-arrow-up text-green-400"></i>
+<span class="text-gray-200">${area}</span>
+</div>
+`).join('')}
+</div>
+</div>
+`;
+}
+
+// ==================== 辅助函数 ====================
+function getPersonalityType() {
+const types = [];
+if (scores['E'] >= 50) types.push('外向'); else types.push('内向');
+if (scores['O'] >= 50) types.push('开放'); else types.push('务实');
+if (scores['C'] >= 50) types.push('尽责'); else types.push('灵活');
+if (scores['A'] >= 50) types.push('友善'); else types.push('独立');
+return types.join('的') + '者';
+}
+
+function getPersonalityDescription() {
+const descriptions = [];
+if (scores['E'] >= 70) descriptions.push('你是一个充满活力的人，喜欢与人交往');
+else if (scores['E'] >= 50) descriptions.push('你能在社交和独处之间找到平衡');
+else descriptions.push('你更享受独处的时光，内心世界丰富');
+
+if (scores['O'] >= 70) descriptions.push('对新鲜事物充满好奇和创造力');
+else if (scores['O'] >= 50) descriptions.push('保持开放心态的同时也重视传统');
+else descriptions.push('更偏好稳定和熟悉的事物');
+
+return descriptions.join('，') + '。';
+}
+
+function getLevelText(score) {
+if (score >= 80) return '非常突出';
+if (score >= 60) return '较为明显';
+if (score >= 40) return '中等水平';
+if (score >= 20) return '相对较低';
+return '较为缺乏';
+}
+
+function getDimensionAnalysis(dimId, score) {
+const analyses = {
+E: {
+high: '你在社交场合表现活跃，善于与人交流，从人际互动中获取能量。你适合需要频繁沟通和协作的工作环境。',
+mid: '你能够在社交和独处之间找到平衡，既享受与人相处的乐趣，也需要独处时间来恢复精力。',
+low: '你更倾向于独立工作，在安静的环境中表现更好。你有着丰富的内心世界，善于深度思考。'
+},
+O: {
+high: '你具有强烈的好奇心和创造力，喜欢探索新事物和新想法。你对艺术和文化有浓厚兴趣，思维开阔。',
+mid: '你对新事物保持开放态度，但也会权衡风险和收益。你能在创新和传统之间找到平衡。',
+low: '你更偏好稳定和可预测的环境，重视传统和经验。你脚踏实地，做事有条理。'
+},
+C: {
+high: '你有很强的自律性和目标导向性，做事认真负责。你善于制定计划并坚持执行，是可靠的合作者。',
+mid: '你有一定的计划性，但也能灵活应对变化。你能在秩序和灵活性之间找到平衡。',
+low: '你更随性自由，喜欢保持选择的开放性。你可能更适合创意性或灵活度高的工作。'
+},
+A: {
+high: '你非常重视人际和谐，乐于助人，善于合作。你在团队中通常是调解者和支持者的角色。',
+mid: '你能在合作和独立之间保持平衡，既能考虑他人需求，也能坚持自己的立场。',
+low: '你更独立自主，重视原则和公正。你适合需要客观判断和独立决策的工作。'
+},
+N: {
+high: '你情绪稳定，能够很好地应对压力和挫折。你在危机情况下能保持冷静，是可靠的问题解决者。',
+mid: '你的情绪有一定波动，但总体可控。你正在学习更好地管理压力和情绪。',
+low: '你对情绪体验较为敏感，这可能使你富有同理心和创造力，但也需要注意情绪管理。'
+},
+T: {
+high: '你偏好理性分析，善于逻辑推理。你做决定时重视客观事实和数据，追求精确和效率。',
+mid: '你能在理性和直觉之间找到平衡，既考虑逻辑也重视感受。',
+low: '你更依赖直觉和感受做决定，重视价值观和人际关系。你可能更适合需要人际敏感度的工作。'
+},
+Cr: {
+high: '你富有创造力和想象力，善于提出新颖的想法和解决方案。你适合需要创新思维的工作。',
+mid: '你有一定的创造力，能在需要时提出新想法，同时也能接受现有的方法。',
+low: '你更偏好既定的方法和流程，擅长执行和优化现有方案。'
+},
+L: {
+high: '你具有天然的领导气质，善于激励和引导他人。你适合管理岗位或需要带领团队的角色。',
+mid: '你在需要时能够承担领导责任，但也能很好地作为团队成员工作。',
+low: '你更擅长独立工作或作为团队成员，不太喜欢承担领导责任。'
+},
+S: {
+high: '你社交能力出众，善于建立和维护人际关系网络。你在社交场合游刃有余。',
+mid: '你有不错的社交能力，能够建立和维护必要的人际关系。',
+low: '你更专注于少数深度的关系，不太热衷于广泛的社交活动。'
+},
+Em: {
+high: '你有很强的同理心，能够深刻理解他人的感受。你适合需要关心和理解他人的工作。',
+mid: '你有一定的同理心，能够理解他人的立场和感受。',
+low: '你更注重逻辑和事实，可能需要刻意练习理解他人的情感需求。'
+},
+P: {
+high: '你抗压能力很强，能在高压环境下保持冷静和高效。你适合快节奏或高压力的工作。',
+mid: '你能应对一定程度的压力，但过高的压力会影响你的表现。',
+low: '你对压力较为敏感，更适合稳定和可预测的工作环境。'
+},
+G: {
+high: '你有强烈的成长心态，相信能力可以通过努力提升。你积极迎接挑战，持续学习。',
+mid: '你对成长持开放态度，愿意在某些方面投入努力提升自己。',
+low: '你可能更相信天赋的作用，需要培养更积极的成长心态。'
+}
+};
+
+const level = score >= 70 ? 'high' : score >= 40 ? 'mid' : 'low';
+return analyses[dimId]?.[level] || '该维度表现中等。';
+}
+
+function getCareerRecommendations() {
+const recommendations = new Set();
+
+Object.keys(scores).forEach(key => {
+const score = scores[key];
+if (score >= 60) {
+const highKey = `high_${key}`;
+if (careerRecommendations[highKey]) {
+careerRecommendations[highKey].slice(0, 2).forEach(c => recommendations.add(c));
+}
+} else if (score < 40) {
+const lowKey = `low_${key}`;
+if (careerRecommendations[lowKey]) {
+careerRecommendations[lowKey].slice(0, 2).forEach(c => recommendations.add(c));
+}
+}
+});
+
+return Array.from(recommendations).slice(0, 12);
+}
+
+function getHobbyRecommendations() {
+const recommendations = new Set();
+
+Object.keys(scores).forEach(key => {
+const score = scores[key];
+if (score >= 60) {
+const highKey = `high_${key}`;
+if (hobbyRecommendations[highKey]) {
+hobbyRecommendations[highKey].slice(0, 2).forEach(h => recommendations.add(h));
+}
+} else if (score < 40) {
+const lowKey = `low_${key}`;
+if (hobbyRecommendations[lowKey]) {
+hobbyRecommendations[lowKey].slice(0, 2).forEach(h => recommendations.add(h));
+}
+}
+});
+
+return Array.from(recommendations).slice(0, 16);
+}
+
+function getFutureRecommendations() {
+const recommendations = [];
+
+if (scores['E'] >= 60) {
+recommendations.push('作为外向型人格，你可以考虑在职业发展中承担更多需要人际沟通的角色，如团队协调或客户关系管理。');
+} else {
+recommendations.push('作为内向型人格，你可以发挥深度思考的优势，在专业领域深耕，成为某个领域的专家。');
+}
+
+if (scores['O'] >= 60) {
+recommendations.push('你的开放性特质使你适合从事需要创新和探索的工作，不妨尝试跨领域学习，拓展视野。');
+}
+
+if (scores['C'] >= 60) {
+recommendations.push('你的尽责性是你的重要优势，建议设定清晰的长期目标，并制定详细的执行计划。');
+} else {
+recommendations.push('可以尝试使用一些时间管理工具和方法，提高自己的计划性和执行力。');
+}
+
+if (scores['N'] < 40) {
+recommendations.push('建议学习一些压力管理和情绪调节的技巧，如冥想、运动或正念练习，这将帮助你更好地应对挑战。');
+}
+
+if (scores['G'] >= 60) {
+recommendations.push('保持你的成长心态，持续学习新技能，你的潜力将不断释放。');
+} else {
+recommendations.push('尝试培养成长心态，相信能力可以通过努力提升，这将帮助你更好地面对挑战。');
+}
+
+return recommendations.slice(0, 5);
+}
+
+function getStrengths() {
+const strengths = [];
+const sortedScores = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+
+const strengthMap = {
+E: '善于社交沟通',
+O: '富有创新思维',
+C: '执行力强、可靠',
+A: '善于合作、乐于助人',
+N: '情绪稳定、抗压能力强',
+T: '逻辑分析能力强',
+Cr: '创造力出众',
+L: '领导能力强',
+S: '社交网络广泛',
+Em: '同理心强、善解人意',
+P: '抗压能力出色',
+G: '持续成长、积极进取'
+};
+
+sortedScores.slice(0, 4).forEach(([key, score]) => {
+if (score >= 50 && strengthMap[key]) {
+strengths.push(strengthMap[key]);
+}
+});
+
+return strengths.length > 0 ? strengths : ['独特的个性', '真诚的态度', '持续学习的能力'];
+}
+
+function getGrowthAreas() {
+const areas = [];
+const sortedScores = Object.entries(scores).sort((a, b) => a[1] - b[1]);
+
+const areaMap = {
+E: '可以尝试更多社交活动，拓展人际网络',
+O: '可以尝试接触新事物，拓展视野',
+C: '可以加强计划性，提高执行力',
+A: '可以练习更好地理解他人观点',
+N: '可以学习压力管理和情绪调节',
+T: '可以培养更系统的思维方式',
+Cr: '可以尝试更多创意活动',
+L: '可以主动承担更多领导责任',
+S: '可以主动建立更多社交联系',
+Em: '可以练习倾听和理解他人',
+P: '可以通过渐进式挑战提升抗压能力',
+G: '可以培养更积极的成长心态'
+};
+
+sortedScores.slice(0, 3).forEach(([key, score]) => {
+if (score < 60 && areaMap[key]) {
+areas.push(areaMap[key]);
+}
+});
+
+return areas.length > 0 ? areas : ['继续保持现有的良好状态', '探索新的可能性', '深化已有优势'];
+}
+
+// ==================== 重置测试 ====================
+function resetTest() {
+showPage('home-page');
+}
+</script>
+</body>
+</html>
