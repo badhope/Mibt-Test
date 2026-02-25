@@ -7,7 +7,6 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
 <script>
 tailwind.config = {
   theme: {
@@ -15,6 +14,14 @@ tailwind.config = {
       fontFamily: {
         display: ['Poppins', 'sans-serif'],
         body: ['Noto Sans SC', 'sans-serif'],
+      },
+      screens: {
+        'xs': '320px',
+        'sm': '640px',
+        'md': '768px',
+        'lg': '1024px',
+        'xl': '1280px',
+        '2xl': '1536px',
       },
       colors: {
         dark: { 900: '#0f172a', 800: '#1e293b', 700: '#334155' },
@@ -25,7 +32,6 @@ tailwind.config = {
   }
 }
 </script>
-
 <style>
   /* 基础设置 */
   body {
@@ -34,10 +40,10 @@ tailwind.config = {
     min-height: 100vh;
     overflow-x: hidden;
   }
-
+  
   /* 动态背景元素 */
   .orb {
-    position: absolute;
+    position: fixed;
     border-radius: 50%;
     filter: blur(80px);
     opacity: 0.5;
@@ -48,14 +54,14 @@ tailwind.config = {
   .orb-1 { width: 40vw; height: 40vw; background: #4f46e5; top: -10%; left: -10%; animation-delay: 0s; }
   .orb-2 { width: 50vw; height: 50vw; background: #0ea5e9; bottom: -20%; right: -10%; animation-delay: -5s; }
   .orb-3 { width: 30vw; height: 30vw; background: #ec4899; top: 40%; left: 60%; animation-delay: -10s; }
-
+  
   @keyframes float {
     0%, 100% { transform: translate(0, 0) scale(1); }
     25% { transform: translate(5vw, 10vh) scale(1.1); }
     50% { transform: translate(-5vw, 5vh) scale(0.9); }
     75% { transform: translate(10vw, -5vh) scale(1.05); }
   }
-
+  
   /* 玻璃拟态卡片 */
   .glass-panel {
     background: rgba(30, 41, 59, 0.7);
@@ -64,7 +70,7 @@ tailwind.config = {
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
   }
-
+  
   /* 按钮动效 */
   .btn-icon {
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -76,7 +82,7 @@ tailwind.config = {
   .btn-icon:active {
     transform: scale(0.95);
   }
-
+  
   /* 选项卡片动效 */
   .option-card {
     transition: all 0.3s ease;
@@ -105,7 +111,7 @@ tailwind.config = {
     border-color: #38bdf8;
     box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
   }
-
+  
   /* 进度条动画 */
   .progress-bar-fill {
     transition: width 0.5s ease-out;
@@ -118,7 +124,7 @@ tailwind.config = {
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
   }
-
+  
   /* 结果页动画 */
   .result-item {
     opacity: 0;
@@ -128,7 +134,7 @@ tailwind.config = {
   @keyframes fadeInUp {
     to { opacity: 1; transform: translateY(0); }
   }
-
+  
   /* 雷达图脉冲 */
   .radar-pulse {
     animation: pulse 2s infinite;
@@ -138,93 +144,262 @@ tailwind.config = {
     50% { opacity: 1; transform: scale(1.02); }
     100% { opacity: 0.7; transform: scale(1); }
   }
-
+  
+  /* 名言卡片样式 */
+  .quote-card {
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(236, 72, 153, 0.1));
+    border-left: 4px solid #38bdf8;
+    position: relative;
+    overflow: hidden;
+  }
+  .quote-card::before {
+    content: '"';
+    position: absolute;
+    top: -10px;
+    left: 10px;
+    font-size: 100px;
+    opacity: 0.1;
+    font-family: serif;
+    color: white;
+  }
+  
+  /* 互动按钮样式 */
+  .interactive-btn {
+    position: relative;
+    overflow: hidden;
+  }
+  .interactive-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+  .interactive-btn:active::after {
+    width: 200px;
+    height: 200px;
+  }
+  
+  /* 粒子背景 */
+  .particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+  
+  .particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.3;
+    animation: particle-float 15s infinite;
+  }
+  
+  @keyframes particle-float {
+    0%, 100% {
+      transform: translateY(100vh) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.3;
+    }
+    90% {
+      opacity: 0.3;
+    }
+    100% {
+      transform: translateY(-10vh) rotate(720deg);
+      opacity: 0;
+    }
+  }
+  
   /* 自定义滚动条 */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
   ::-webkit-scrollbar-thumb { background: rgba(14, 165, 233, 0.5); border-radius: 3px; }
-
-  /* 移动端优化 */
-  @media (max-width: 768px) {
-    .glass-panel { padding: 1.5rem; }
-    .btn-icon { padding: 0.75rem 1.5rem; }
+  
+  /* 响应式优化 */
+  @media (max-width: 640px) {
+    .glass-panel { padding: 1.25rem; }
+    .btn-icon { padding: 0.625rem 1.25rem; }
+    .quote-card { padding: 1rem; }
+    .text-4xl { font-size: 1.875rem; }
+    .text-5xl { font-size: 2.25rem; }
+    .text-6xl { font-size: 2.75rem; }
+  }
+  
+  @media (min-width: 1024px) {
+    .glass-panel { padding: 2.5rem; }
+  }
+  
+  /* 打字机效果 */
+  .typewriter {
+    overflow: hidden;
+    border-right: 2px solid #38bdf8;
+    white-space: nowrap;
+    animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
+  }
+  
+  @keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+  }
+  
+  @keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: #38bdf8 }
+  }
+  
+  /* 心跳动画 */
+  .heartbeat {
+    animation: heartbeat 1.5s ease-in-out infinite;
+  }
+  
+  @keyframes heartbeat {
+    0% { transform: scale(1); }
+    14% { transform: scale(1.1); }
+    28% { transform: scale(1); }
+    42% { transform: scale(1.1); }
+    70% { transform: scale(1); }
   }
 </style>
 </head>
 <body class="text-gray-100">
-
 <!-- 动态背景 -->
 <div class="orb orb-1"></div>
 <div class="orb orb-2"></div>
 <div class="orb orb-3"></div>
 
-<!-- 主容器 -->
-<div id="app" class="relative z-10 container mx-auto px-4 py-8 min-h-screen flex flex-col justify-center">
+<!-- 粒子背景 -->
+<div class="particles" id="particles"></div>
 
+<!-- 主容器 -->
+<div id="app" class="relative z-10 container mx-auto px-4 py-6 xs:py-8 min-h-screen flex flex-col justify-center">
+  
   <!-- ==================== 首页 ==================== -->
   <div id="home-page" class="flex flex-col items-center justify-center text-center">
-    <div class="mb-12 fade-in">
-      <div class="inline-block p-4 rounded-full bg-gradient-to-tr from-accent-500 to-warm-500 mb-6 shadow-lg shadow-accent-500/30">
-        <i class="fas fa-atom text-4xl text-white animate-spin" style="animation-duration: 10s;"></i>
+    <div class="mb-8 xs:mb-12 fade-in w-full">
+      <div class="inline-block p-3 xs:p-4 rounded-full bg-gradient-to-tr from-accent-500 to-warm-500 mb-4 xs:mb-6 shadow-lg shadow-accent-500/30">
+        <i class="fas fa-atom text-3xl xs:text-4xl text-white animate-spin" style="animation-duration: 10s;"></i>
       </div>
-      <h1 class="text-4xl md:text-6xl font-display font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-200 to-cyan-300">
+      <h1 class="text-3xl xs:text-4xl md:text-6xl font-display font-bold mb-3 xs:mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-200 to-cyan-300 px-4">
         深度人格探索
       </h1>
-      <p class="text-lg md:text-xl text-gray-400 max-w-xl mx-auto">
+      <p class="text-base xs:text-lg md:text-xl text-gray-400 max-w-xl mx-auto px-4">
         这不仅仅是一个测试，更是一次探索内心宇宙的旅程
       </p>
     </div>
-
-    <div class="grid md:grid-cols-2 gap-8 max-w-4xl w-full">
-      <!-- 简单版卡片 -->
-      <div class="glass-panel rounded-3xl p-8 transform hover:scale-105 transition-all duration-500 cursor-pointer group" onclick="startTest('simple')">
-        <div class="flex justify-between items-start mb-6">
-          <div class="bg-green-500/20 p-3 rounded-xl text-green-400 group-hover:bg-green-500 group-hover:text-white transition-colors">
-            <i class="fas fa-feather-alt text-2xl"></i>
-          </div>
-          <span class="bg-green-500/20 text-green-300 text-xs font-bold px-3 py-1 rounded-full">快速体验</span>
+    
+    <!-- 名言卡片 -->
+    <div class="quote-card glass-panel rounded-2xl p-4 xs:p-6 mb-8 max-w-2xl w-full mx-4">
+      <div class="flex items-start gap-4">
+        <div class="bg-accent-500/20 p-2 rounded-full shrink-0">
+          <i class="fas fa-quote-left text-accent-400"></i>
         </div>
-        <h3 class="text-2xl font-bold mb-3">轻量版探索</h3>
-        <p class="text-gray-400 mb-6 text-sm">适合碎片时间，快速了解核心性格轮廓</p>
-        <div class="space-y-2 text-sm text-gray-300 mb-8">
+        <div class="text-left">
+          <p id="daily-quote" class="text-sm xs:text-base text-gray-300 italic mb-2"></p>
+          <p id="quote-author" class="text-xs xs:text-sm text-gray-500"></p>
+        </div>
+      </div>
+      <button onclick="getNewQuote()" class="interactive-btn mt-4 text-accent-400 hover:text-accent-300 transition-colors text-sm flex items-center gap-2">
+        <i class="fas fa-sync-alt"></i> 换一条
+      </button>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 xs:gap-8 max-w-4xl w-full px-4">
+      <!-- 简单版卡片 -->
+      <div class="glass-panel rounded-2xl xs:rounded-3xl p-6 xs:p-8 transform hover:scale-105 transition-all duration-500 cursor-pointer group" onclick="startTest('simple')">
+        <div class="flex justify-between items-start mb-4 xs:mb-6">
+          <div class="bg-green-500/20 p-2 xs:p-3 rounded-xl text-green-400 group-hover:bg-green-500 group-hover:text-white transition-colors">
+            <i class="fas fa-feather-alt text-xl xs:text-2xl"></i>
+          </div>
+          <span class="bg-green-500/20 text-green-300 text-xs font-bold px-2 xs:px-3 py-1 rounded-full">快速体验</span>
+        </div>
+        <h3 class="text-xl xs:text-2xl font-bold mb-2 xs:mb-3">轻量版探索</h3>
+        <p class="text-gray-400 mb-4 xs:mb-6 text-xs xs:text-sm">适合碎片时间，快速了解核心性格轮廓</p>
+        <div class="space-y-2 text-xs xs:text-sm text-gray-300 mb-6 xs:mb-8">
           <div class="flex items-center gap-2"><i class="fas fa-clock text-green-400"></i> 约 5 分钟</div>
           <div class="flex items-center gap-2"><i class="fas fa-list-check text-green-400"></i> 24 道精选题</div>
           <div class="flex items-center gap-2"><i class="fas fa-chart-simple text-green-400"></i> 6 维核心分析</div>
         </div>
-        <button class="w-full btn-icon bg-green-500/20 text-green-300 font-bold py-3 rounded-xl flex items-center justify-center gap-2 group-hover:bg-green-500 group-hover:text-white">
+        <button class="w-full btn-icon bg-green-500/20 text-green-300 font-bold py-2 xs:py-3 rounded-xl flex items-center justify-center gap-2 group-hover:bg-green-500 group-hover:text-white text-sm xs:text-base">
           <span>开始旅程</span> <i class="fas fa-arrow-right"></i>
         </button>
       </div>
-
+      
       <!-- 复杂版卡片 -->
-      <div class="glass-panel rounded-3xl p-8 transform hover:scale-105 transition-all duration-500 cursor-pointer group relative overflow-hidden">
+      <div class="glass-panel rounded-2xl xs:rounded-3xl p-6 xs:p-8 transform hover:scale-105 transition-all duration-500 cursor-pointer group relative overflow-hidden">
         <div class="absolute top-0 right-0 w-full h-full bg-gradient-to-bl from-orange-500/10 to-transparent pointer-events-none"></div>
-        <div class="flex justify-between items-start mb-6 relative z-10">
-          <div class="bg-orange-500/20 p-3 rounded-xl text-orange-400 group-hover:bg-orange-500 group-hover:text-white transition-colors">
-            <i class="fas fa-rocket text-2xl"></i>
+        <div class="flex justify-between items-start mb-4 xs:mb-6 relative z-10">
+          <div class="bg-orange-500/20 p-2 xs:p-3 rounded-xl text-orange-400 group-hover:bg-orange-500 group-hover:text-white transition-colors">
+            <i class="fas fa-rocket text-xl xs:text-2xl"></i>
           </div>
-          <span class="bg-orange-500/20 text-orange-300 text-xs font-bold px-3 py-1 rounded-full animate-pulse">推荐</span>
+          <span class="bg-orange-500/20 text-orange-300 text-xs font-bold px-2 xs:px-3 py-1 rounded-full animate-pulse">推荐</span>
         </div>
-        <h3 class="text-2xl font-bold mb-3 relative z-10">深度版探索</h3>
-        <p class="text-gray-400 mb-6 text-sm relative z-10">全面剖析，解锁隐藏性格特质与潜能</p>
-        <div class="space-y-2 text-sm text-gray-300 mb-8 relative z-10">
+        <h3 class="text-xl xs:text-2xl font-bold mb-2 xs:mb-3 relative z-10">深度版探索</h3>
+        <p class="text-gray-400 mb-4 xs:mb-6 text-xs xs:text-sm relative z-10">全面剖析，解锁隐藏性格特质与潜能</p>
+        <div class="space-y-2 text-xs xs:text-sm text-gray-300 mb-6 xs:mb-8 relative z-10">
           <div class="flex items-center gap-2"><i class="fas fa-hourglass-half text-orange-400"></i> 约 15 分钟</div>
           <div class="flex items-center gap-2"><i class="fas fa-layer-group text-orange-400"></i> 60 道深度题</div>
           <div class="flex items-center gap-2"><i class="fas fa-chart-line text-orange-400"></i> 12 维精细画像</div>
           <div class="flex items-center gap-2"><i class="fas fa-lightbulb text-orange-400"></i> 职业/爱好建议</div>
         </div>
-        <button class="w-full btn-icon bg-orange-500/20 text-orange-300 font-bold py-3 rounded-xl flex items-center justify-center gap-2 group-hover:bg-orange-500 group-hover:text-white relative z-10">
+        <button class="w-full btn-icon bg-orange-500/20 text-orange-300 font-bold py-2 xs:py-3 rounded-xl flex items-center justify-center gap-2 group-hover:bg-orange-500 group-hover:text-white relative z-10 text-sm xs:text-base">
           <span>深入探索</span> <i class="fas fa-rocket"></i>
         </button>
       </div>
     </div>
+    
+    <!-- 趣味小测试 -->
+    <div class="mt-8 xs:mt-12 max-w-4xl w-full px-4">
+      <div class="glass-panel rounded-2xl xs:rounded-3xl p-6 xs:p-8">
+        <h3 class="text-lg xs:text-xl font-bold mb-4 flex items-center gap-2">
+          <i class="fas fa-magic text-purple-400"></i> 趣味小测试
+        </h3>
+        <div class="grid grid-cols-1 xs:grid-cols-2 gap-4">
+          <div class="bg-purple-500/10 p-4 rounded-xl hover:bg-purple-500/20 transition-colors cursor-pointer group" onclick="startMiniTest('color')">
+            <div class="flex items-center gap-3 mb-2">
+              <div class="w-10 h-10 rounded-full bg-gradient-to-r from-red-500 via-green-500 to-blue-500 flex items-center justify-center">
+                <i class="fas fa-palette text-white"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-sm xs:text-base group-hover:text-purple-300 transition-colors">性格色彩测试</h4>
+                <p class="text-xs text-gray-400">探索你的性格色彩</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-pink-500/10 p-4 rounded-xl hover:bg-pink-500/20 transition-colors cursor-pointer group" onclick="startMiniTest('animal')">
+            <div class="flex items-center gap-3 mb-2">
+              <div class="w-10 h-10 rounded-full bg-gradient-to-r from-pink-500 to-orange-500 flex items-center justify-center">
+                <i class="fas fa-paw text-white"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-sm xs:text-base group-hover:text-pink-300 transition-colors">动物性格测试</h4>
+                <p class="text-xs text-gray-400">发现你的动物灵魂</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-
+  
   <!-- ==================== 测试页 ==================== -->
-  <div id="test-page" class="hidden max-w-3xl mx-auto w-full">
+  <div id="test-page" class="hidden max-w-3xl mx-auto w-full px-4">
     <!-- 顶部进度条 -->
-    <div class="mb-8">
-      <div class="flex justify-between items-center mb-2 text-sm text-gray-400">
+    <div class="mb-6 xs:mb-8">
+      <div class="flex justify-between items-center mb-2 text-xs xs:text-sm text-gray-400">
         <span id="dimension-label" class="font-bold text-accent-400"><i class="fas fa-cube mr-1"></i> 维度</span>
         <span id="progress-text">1 / 24</span>
       </div>
@@ -232,57 +407,84 @@ tailwind.config = {
         <div id="progress-bar" class="progress-bar-fill h-full rounded-full" style="width: 0%"></div>
       </div>
     </div>
-
+    
     <!-- 题目容器 -->
-    <div class="glass-panel rounded-3xl p-6 md:p-10 mb-8">
-      <h2 id="question-text" class="text-xl md:text-2xl font-bold mb-8 leading-relaxed min-h-[80px]">
+    <div class="glass-panel rounded-2xl xs:rounded-3xl p-5 xs:p-10 mb-6 xs:mb-8">
+      <h2 id="question-text" class="text-lg xs:text-xl md:text-2xl font-bold mb-6 xs:mb-8 leading-relaxed min-h-[60px] xs:min-h-[80px]">
         题目加载中...
       </h2>
       
-      <div id="options-container" class="space-y-4">
+      <div id="options-container" class="space-y-3 xs:space-y-4">
         <!-- 选项动态生成 -->
       </div>
     </div>
-
+    
     <!-- 底部导航 -->
-    <div class="flex justify-between items-center">
-      <button id="prev-btn" onclick="prevQuestion()" class="btn-icon rounded-full w-14 h-14 flex items-center justify-center bg-gray-700/50 hover:bg-gray-600 disabled:opacity-30 disabled:cursor-not-allowed" disabled>
-        <i class="fas fa-arrow-left text-xl"></i>
+    <div class="flex justify-between items-center px-2 xs:px-0">
+      <button id="prev-btn" onclick="prevQuestion()" class="btn-icon rounded-full w-12 h-12 xs:w-14 xs:h-14 flex items-center justify-center bg-gray-700/50 hover:bg-gray-600 disabled:opacity-30 disabled:cursor-not-allowed">
+        <i class="fas fa-arrow-left text-lg xs:text-xl"></i>
       </button>
       
-      <button id="next-btn" onclick="nextQuestion()" class="btn-icon rounded-full w-14 h-14 flex items-center justify-center bg-accent-500 hover:bg-accent-600 shadow-lg shadow-accent-500/30 disabled:opacity-30 disabled:cursor-not-allowed" disabled>
-        <i class="fas fa-arrow-right text-xl"></i>
+      <button id="next-btn" onclick="nextQuestion()" class="btn-icon rounded-full w-12 h-12 xs:w-14 xs:h-14 flex items-center justify-center bg-accent-500 hover:bg-accent-600 shadow-lg shadow-accent-500/30 disabled:opacity-30 disabled:cursor-not-allowed">
+        <i class="fas fa-arrow-right text-lg xs:text-xl"></i>
       </button>
     </div>
   </div>
-
+  
   <!-- ==================== 结果页 ==================== -->
-  <div id="result-page" class="hidden max-w-4xl mx-auto w-full pb-20">
-    <div class="text-center mb-12">
-      <div class="inline-block p-4 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-500 mb-6 shadow-lg">
-        <i class="fas fa-user-astronaut text-4xl text-white"></i>
+  <div id="result-page" class="hidden max-w-4xl mx-auto w-full pb-16 xs:pb-20 px-4">
+    <div class="text-center mb-8 xs:mb-12">
+      <div class="inline-block p-3 xs:p-4 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-500 mb-4 xs:mb-6 shadow-lg">
+        <i class="fas fa-user-astronaut text-3xl xs:text-4xl text-white"></i>
       </div>
-      <h1 class="text-3xl md:text-5xl font-display font-bold mb-2">探索报告生成完毕</h1>
-      <p class="text-gray-400">基于你的回答，这是你的内心宇宙画像</p>
+      <h1 class="text-2xl xs:text-3xl md:text-5xl font-display font-bold mb-2">探索报告生成完毕</h1>
+      <p class="text-gray-400 text-sm xs:text-base">基于你的回答，这是你的内心宇宙画像</p>
     </div>
-
+    
     <div id="result-content">
       <!-- 动态生成结果 -->
     </div>
     
-    <div class="text-center mt-12">
-      <button onclick="resetTest()" class="btn-icon bg-gray-700/50 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-full inline-flex items-center gap-2">
+    <!-- 分享按钮 -->
+    <div class="glass-panel rounded-2xl p-6 mb-8 text-center">
+      <h3 class="text-lg font-bold mb-4">分享你的结果</h3>
+      <div class="flex flex-wrap justify-center gap-3">
+        <button onclick="shareResult('wechat')" class="interactive-btn bg-green-500/20 hover:bg-green-500/30 text-green-300 px-4 py-2 rounded-xl flex items-center gap-2 text-sm">
+          <i class="fab fa-weixin"></i> 微信
+        </button>
+        <button onclick="shareResult('weibo')" class="interactive-btn bg-red-500/20 hover:bg-red-500/30 text-red-300 px-4 py-2 rounded-xl flex items-center gap-2 text-sm">
+          <i class="fab fa-weibo"></i> 微博
+        </button>
+        <button onclick="shareResult('copy')" class="interactive-btn bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 px-4 py-2 rounded-xl flex items-center gap-2 text-sm">
+          <i class="fas fa-copy"></i> 复制链接
+        </button>
+      </div>
+    </div>
+    
+    <div class="text-center mt-8 xs:mt-12">
+      <button onclick="resetTest()" class="btn-icon bg-gray-700/50 hover:bg-gray-600 text-white font-bold py-2 xs:py-3 px-6 xs:px-8 rounded-full inline-flex items-center gap-2 text-sm xs:text-base">
         <i class="fas fa-redo"></i> 重新测试
       </button>
     </div>
   </div>
-
+  
+  <!-- ==================== 趣味测试页 ==================== -->
+  <div id="mini-test-page" class="hidden max-w-2xl mx-auto w-full px-4">
+    <div class="glass-panel rounded-2xl xs:rounded-3xl p-6 xs:p-8 mb-6">
+      <h2 id="mini-test-title" class="text-xl xs:text-2xl font-bold mb-6 text-center"></h2>
+      <div id="mini-test-content" class="text-center">
+        <!-- 动态生成内容 -->
+      </div>
+    </div>
+    <button onclick="backToHome()" class="w-full btn-icon bg-gray-700/50 hover:bg-gray-600 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2">
+      <i class="fas fa-home"></i> 返回首页
+    </button>
+  </div>
 </div>
 
 <!-- ==================== 核心逻辑脚本 ==================== -->
 <script>
 // --- 数据定义 ---
-
 // 维度定义
 const dimensions = {
 simple: [
@@ -308,6 +510,25 @@ complex: [
 { id: 'G', name: '成长性', icon: 'fa-seedling', desc: '学习心态' }
 ]
 };
+
+// 名言库
+const quotes = [
+{ text: "认识你自己。", author: "苏格拉底", title: "古希腊哲学家" },
+{ text: "我们是我们反复做的事。因此，卓越不是一种行为，而是一种习惯。", author: "亚里士多德", title: "古希腊哲学家" },
+{ text: "唯一真正的智慧是知道自己一无所知。", author: "苏格拉底", title: "古希腊哲学家" },
+{ text: "未经审视的生活不值得过。", author: "苏格拉底", title: "古希腊哲学家" },
+{ text: "人是万物的尺度。", author: "普罗泰戈拉", title: "古希腊哲学家" },
+{ text: "教育不是灌输，而是点燃火焰。", author: "苏格拉底", title: "古希腊哲学家" },
+{ text: "幸福不是奖赏，而是结果；痛苦不是惩罚，而是报应。", author: "柏拉图", title: "古希腊哲学家" },
+{ text: "人格是一种心理结构，它决定了一个人对环境的独特适应。", author: "戈登·奥尔波特", title: "人格心理学家" },
+{ text: "性格决定命运。", author: "赫拉克利特", title: "古希腊哲学家" },
+{ text: "人的本质不是单个人所固有的抽象物，在其现实性上，它是一切社会关系的总和。", author: "卡尔·马克思", title: "哲学家" },
+{ text: "人们往往只看到自己想看到的东西。", author: "卡尔·荣格", title: "心理学家" },
+{ text: "一个人毕其一生的努力，就是在整合他自童年时代起就已形成的性格。", author: "卡尔·荣格", title: "心理学家" },
+{ text: "性格是一个人在尝试适应环境时所表现出来的独特方式。", author: "阿尔弗雷德·阿德勒", title: "心理学家" },
+{ text: "我们在这个世界上的处境是矛盾的：我们既是演员，又是观众。", author: "卡尔·雅斯贝尔斯", title: "哲学家" },
+{ text: "人生就像一场戏，每个人都是自己人生的导演。", author: "让-保罗·萨特", title: "哲学家" }
+];
 
 // 题库 (完整版)
 const questions = {
@@ -459,244 +680,513 @@ high_G: ['读书会', '在线课程', '技能交换', '挑战新事物', '写日
 }
 };
 
+// 趣味测试数据
+const miniTests = {
+color: {
+title: '性格色彩测试',
+questions: [
+{
+text: '你更喜欢哪种场景？',
+options: [
+{ text: '宁静的湖边', color: '蓝色', desc: '代表平静与深邃' },
+{ text: '热闹的市集', color: '橙色', desc: '代表活力与热情' },
+{ text: '神秘的森林', color: '绿色', desc: '代表生机与神秘' },
+{ text: '壮丽的高山', color: '红色', desc: '代表力量与决心' }
+]
+},
+{
+text: '遇到困难时，你的第一反应是？',
+options: [
+{ text: '冷静分析', color: '蓝色', desc: '理性思考者' },
+{ text: '寻求帮助', color: '黄色', desc: '善于合作' },
+{ text: '积极行动', color: '红色', desc: '行动派' },
+{ text: '调整心态', color: '绿色', desc: '心态平和' }
+]
+},
+{
+text: '你更喜欢哪种休闲方式？',
+options: [
+{ text: '阅读思考', color: '蓝色', desc: '喜欢独处思考' },
+{ text: '聚会社交', color: '橙色', desc: '享受人际互动' },
+{ text: '户外探险', color: '绿色', desc: '亲近自然' },
+{ text: '艺术创作', color: '紫色', desc: '追求创意表达' }
+]
+}
+]
+},
+animal: {
+title: '动物性格测试',
+questions: [
+{
+text: '面对挑战时，你更像哪种动物？',
+options: [
+{ text: '狮子 - 勇敢面对', animal: '狮子', desc: '领导型人格' },
+{ text: '猫头鹰 - 智慧分析', animal: '猫头鹰', desc: '思考型人格' },
+{ text: '海豚 - 灵活应对', animal: '海豚', desc: '适应型人格' },
+{ text: '乌龟 - 稳健前行', animal: '乌龟', desc: '稳健型人格' }
+]
+},
+{
+text: '在团队中，你通常扮演什么角色？',
+options: [
+{ text: '领导者', animal: '狼', desc: '团队核心' },
+{ text: '协调者', animal: '蜜蜂', desc: '团队合作者' },
+{ text: '创新者', animal: '狐狸', desc: '创意提供者' },
+{ text: '执行者', animal: '蚂蚁', desc: '踏实可靠' }
+]
+},
+{
+text: '周末你更倾向于？',
+options: [
+{ text: '组织活动', animal: '孔雀', desc: '社交达人' },
+{ text: '独处休息', animal: '猫', desc: '独立自主' },
+{ text: '学习新知', animal: '猴子', desc: '好奇探索' },
+{ text: '亲近自然', animal: '鹿', desc: '温和自然' }
+]
+}
+]
+}
+};
+
 // --- 状态管理 ---
 let currentMode = 'simple';
 let currentQuestionIndex = 0;
 let answers = {};
 let scores = {};
+let miniTestAnswers = {};
+let currentMiniTest = null;
+let currentMiniQuestion = 0;
+
+// --- 初始化 ---
+document.addEventListener('DOMContentLoaded', function() {
+  // 创建粒子背景
+  createParticles();
+  // 显示随机名言
+  getNewQuote();
+});
+
+// --- 粒子背景 ---
+function createParticles() {
+  const container = document.getElementById('particles');
+  if (!container) return;
+  
+  for (let i = 0; i < 30; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.animationDelay = Math.random() * 15 + 's';
+    particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+    container.appendChild(particle);
+  }
+}
+
+// --- 名言功能 ---
+function getNewQuote() {
+  const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+  const quoteEl = document.getElementById('daily-quote');
+  const authorEl = document.getElementById('quote-author');
+  
+  if (quoteEl && authorEl) {
+    quoteEl.textContent = randomQuote.text;
+    authorEl.textContent = `— ${randomQuote.author} · ${randomQuote.title}`;
+  }
+}
 
 // --- 核心逻辑函数 ---
-
 function startTest(mode) {
-currentMode = mode;
-currentQuestionIndex = 0;
-answers = {};
-scores = {};
-dimensions[mode].forEach(dim => scores[dim.id] = 0);
-
-document.getElementById('home-page').classList.add('hidden');
-document.getElementById('result-page').classList.add('hidden');
-document.getElementById('test-page').classList.remove('hidden');
-
-renderQuestion();
+  currentMode = mode;
+  currentQuestionIndex = 0;
+  answers = {};
+  scores = {};
+  dimensions[mode].forEach(dim => scores[dim.id] = 0);
+  
+  document.getElementById('home-page').classList.add('hidden');
+  document.getElementById('result-page').classList.add('hidden');
+  document.getElementById('test-page').classList.remove('hidden');
+  
+  renderQuestion();
 }
 
 function renderQuestion() {
-const q = questions[currentMode][currentQuestionIndex];
-const total = questions[currentMode].length;
-const dim = dimensions[currentMode].find(d => d.id === q.dimension);
-
-// 更新进度
-document.getElementById('progress-text').innerText = `${currentQuestionIndex + 1} / ${total}`;
-document.getElementById('progress-bar').style.width = `${((currentQuestionIndex + 1) / total) * 100}%`;
-document.getElementById('dimension-label').innerHTML = `<i class="fas ${dim.icon} mr-1"></i> ${dim.name}`;
-
-// 更新题目
-document.getElementById('question-text').innerText = q.text;
-
-// 渲染选项
-const container = document.getElementById('options-container');
-container.innerHTML = q.options.map((opt, idx) => `
-<div class="option-card glass-panel p-4 rounded-xl flex items-center gap-4 ${answers[currentQuestionIndex] === idx ? 'selected' : ''}" onclick="selectOption(${idx})">
-<div class="w-8 h-8 rounded-full border border-gray-500 flex items-center justify-center text-sm font-bold shrink-0 transition-all ${answers[currentQuestionIndex] === idx ? 'bg-accent-500 border-accent-500 text-white' : 'text-gray-400'}">
-${answers[currentQuestionIndex] === idx ? '<i class="fas fa-check"></i>' : String.fromCharCode(65 + idx)}
-</div>
-<span class="text-gray-200">${opt.text}</span>
-</div>
-`).join('');
-
-// 按钮状态
-document.getElementById('prev-btn').disabled = currentQuestionIndex === 0;
-const nextBtn = document.getElementById('next-btn');
-nextBtn.disabled = answers[currentQuestionIndex] === undefined;
-
-if (currentQuestionIndex === total - 1) {
-nextBtn.innerHTML = '<i class="fas fa-chart-pie"></i>';
-} else {
-nextBtn.innerHTML = '<i class="fas fa-arrow-right"></i>';
-}
+  const q = questions[currentMode][currentQuestionIndex];
+  const total = questions[currentMode].length;
+  const dim = dimensions[currentMode].find(d => d.id === q.dimension);
+  
+  // 更新进度
+  document.getElementById('progress-text').innerText = `${currentQuestionIndex + 1} / ${total}`;
+  document.getElementById('progress-bar').style.width = `${((currentQuestionIndex + 1) / total) * 100}%`;
+  document.getElementById('dimension-label').innerHTML = `<i class="fas ${dim.icon} mr-1"></i> ${dim.name}`;
+  
+  // 更新题目
+  document.getElementById('question-text').innerText = q.text;
+  
+  // 渲染选项
+  const container = document.getElementById('options-container');
+  container.innerHTML = q.options.map((opt, idx) => `
+    <div class="option-card glass-panel p-3 xs:p-4 rounded-xl flex items-center gap-3 xs:gap-4 ${answers[currentQuestionIndex] === idx ? 'selected' : ''}" onclick="selectOption(${idx})">
+      <div class="w-7 h-7 xs:w-8 xs:h-8 rounded-full border border-gray-500 flex items-center justify-center text-xs xs:text-sm font-bold shrink-0 transition-all ${answers[currentQuestionIndex] === idx ? 'bg-accent-500 border-accent-500 text-white' : 'text-gray-400'}">
+        ${answers[currentQuestionIndex] === idx ? '<i class="fas fa-check"></i>' : String.fromCharCode(65 + idx)}
+      </div>
+      <span class="text-gray-200 text-sm xs:text-base">${opt.text}</span>
+    </div>
+  `).join('');
+  
+  // 按钮状态
+  document.getElementById('prev-btn').disabled = currentQuestionIndex === 0;
+  const nextBtn = document.getElementById('next-btn');
+  nextBtn.disabled = answers[currentQuestionIndex] === undefined;
+  
+  if (currentQuestionIndex === total - 1) {
+    nextBtn.innerHTML = '<i class="fas fa-chart-pie"></i>';
+  } else {
+    nextBtn.innerHTML = '<i class="fas fa-arrow-right"></i>';
+  }
 }
 
 function selectOption(idx) {
-answers[currentQuestionIndex] = idx;
-renderQuestion();
+  answers[currentQuestionIndex] = idx;
+  renderQuestion();
 }
 
 function nextQuestion() {
-if (answers[currentQuestionIndex] === undefined) return;
-
-if (currentQuestionIndex < questions[currentMode].length - 1) {
-currentQuestionIndex++;
-renderQuestion();
-} else {
-calculateResults();
-}
+  if (answers[currentQuestionIndex] === undefined) return;
+  
+  if (currentQuestionIndex < questions[currentMode].length - 1) {
+    currentQuestionIndex++;
+    renderQuestion();
+  } else {
+    calculateResults();
+  }
 }
 
 function prevQuestion() {
-if (currentQuestionIndex > 0) {
-currentQuestionIndex--;
-renderQuestion();
-}
+  if (currentQuestionIndex > 0) {
+    currentQuestionIndex--;
+    renderQuestion();
+  }
 }
 
 function calculateResults() {
-// 计算原始分
-questions[currentMode].forEach((q, idx) => {
-if (answers[idx] !== undefined) {
-scores[q.dimension] += q.options[answers[idx]].score;
-}
-});
-
-// 归一化
-const maxScore = currentMode === 'simple' ? 20 : 25;
-Object.keys(scores).forEach(k => {
-scores[k] = Math.round((scores[k] / maxScore) * 100);
-});
-
-showResults();
+  // 计算原始分
+  questions[currentMode].forEach((q, idx) => {
+    if (answers[idx] !== undefined) {
+      scores[q.dimension] += q.options[answers[idx]].score;
+    }
+  });
+  
+  // 归一化
+  const maxScore = currentMode === 'simple' ? 20 : 25;
+  Object.keys(scores).forEach(k => {
+    scores[k] = Math.round((scores[k] / maxScore) * 100);
+  });
+  
+  showResults();
 }
 
 function showResults() {
-document.getElementById('test-page').classList.add('hidden');
-document.getElementById('result-page').classList.remove('hidden');
-
-const dims = dimensions[currentMode];
-const content = document.getElementById('result-content');
-
-// 生成性格描述
-const typeDesc = getTypeDescription();
-
-// 生成雷达图数据
-const radarData = dims.map(d => scores[d.id]);
-
-content.innerHTML = `
-<!-- 核心画像 -->
-<div class="glass-panel rounded-3xl p-8 mb-8 result-item" style="animation-delay: 0.1s">
-<div class="flex flex-col md:flex-row items-center gap-6">
-<div class="w-24 h-24 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center text-4xl shadow-lg shadow-cyan-500/30">
-<i class="fas fa-user-astronaut"></i>
-</div>
-<div class="text-center md:text-left">
-<h2 class="text-2xl font-bold mb-2">${typeDesc.type}</h2>
-<p class="text-gray-400">${typeDesc.desc}</p>
-</div>
-</div>
-</div>
-
-<!-- 雷达图区域 -->
-<div class="glass-panel rounded-3xl p-8 mb-8 result-item" style="animation-delay: 0.2s">
-<h3 class="text-xl font-bold mb-6 flex items-center gap-2"><i class="fas fa-chart-radar text-accent-400"></i> 能力雷达图</h3>
-<div class="flex flex-col lg:flex-row items-center gap-8">
-<div class="w-full lg:w-1/2 flex justify-center">
-<svg viewBox="0 0 200 200" class="w-64 h-64 radar-pulse">
-<!-- 绘制雷达图背景 -->
-${createRadarBackground(dims.length)}
-<!-- 绘制数据 -->
-${createRadarPath(radarData, dims.length)}
-<!-- 绘制标签 -->
-${createRadarLabels(dims)}
-</svg>
-</div>
-<div class="w-full lg:w-1/2 space-y-4">
-${dims.map(d => `
-<div>
-<div class="flex justify-between mb-1 text-sm">
-<span class="flex items-center gap-2"><i class="fas ${d.icon} text-accent-400"></i> ${d.name}</span>
-<span class="font-bold">${scores[d.id]}%</span>
-</div>
-<div class="w-full bg-gray-700 rounded-full h-2">
-<div class="bg-gradient-to-r from-cyan-500 to-blue-500 h-2 rounded-full transition-all duration-1000" style="width: ${scores[d.id]}%"></div>
-</div>
-</div>
-`).join('')}
-</div>
-</div>
-</div>
-
-<!-- 职业推荐 -->
-<div class="glass-panel rounded-3xl p-8 mb-8 result-item" style="animation-delay: 0.3s">
-<h3 class="text-xl font-bold mb-6 flex items-center gap-2"><i class="fas fa-briefcase text-warm-400"></i> 职业倾向</h3>
-<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-${getRecommendation('career').map(c => `
-<div class="bg-white/5 p-3 rounded-xl text-center hover:bg-white/10 transition-colors cursor-pointer">
-<i class="fas fa-star text-warm-400 text-xs mr-1"></i> ${c}
-</div>
-`).join('')}
-</div>
-</div>
-
-<!-- 爱好推荐 -->
-<div class="glass-panel rounded-3xl p-8 result-item" style="animation-delay: 0.4s">
-<h3 class="text-xl font-bold mb-6 flex items-center gap-2"><i class="fas fa-heart text-pink-400"></i> 推荐爱好</h3>
-<div class="flex flex-wrap gap-3">
-${getRecommendation('hobby').map(h => `
-<span class="px-4 py-2 rounded-full bg-pink-500/10 border border-pink-500/30 text-pink-300 text-sm hover:bg-pink-500/20 transition-colors">${h}</span>
-`).join('')}
-</div>
-</div>
-`;
+  document.getElementById('test-page').classList.add('hidden');
+  document.getElementById('result-page').classList.remove('hidden');
+  
+  const dims = dimensions[currentMode];
+  const content = document.getElementById('result-content');
+  
+  // 生成性格描述
+  const typeDesc = getTypeDescription();
+  
+  // 生成雷达图数据
+  const radarData = dims.map(d => scores[d.id]);
+  
+  content.innerHTML = `
+    <!-- 核心画像 -->
+    <div class="glass-panel rounded-2xl xs:rounded-3xl p-6 xs:p-8 mb-6 xs:mb-8 result-item" style="animation-delay: 0.1s">
+      <div class="flex flex-col md:flex-row items-center gap-4 xs:gap-6">
+        <div class="w-20 h-20 xs:w-24 xs:h-24 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center text-3xl xs:text-4xl shadow-lg shadow-cyan-500/30">
+          <i class="fas fa-user-astronaut"></i>
+        </div>
+        <div class="text-center md:text-left">
+          <h2 class="text-xl xs:text-2xl font-bold mb-2">${typeDesc.type}</h2>
+          <p class="text-gray-400 text-sm xs:text-base">${typeDesc.desc}</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 雷达图区域 -->
+    <div class="glass-panel rounded-2xl xs:rounded-3xl p-6 xs:p-8 mb-6 xs:mb-8 result-item" style="animation-delay: 0.2s">
+      <h3 class="text-lg xs:text-xl font-bold mb-4 xs:mb-6 flex items-center gap-2">
+        <i class="fas fa-chart-radar text-accent-400"></i> 能力雷达图
+      </h3>
+      <div class="flex flex-col lg:flex-row items-center gap-6 xs:gap-8">
+        <div class="w-full lg:w-1/2 flex justify-center">
+          <svg viewBox="0 0 200 200" class="w-48 h-48 xs:w-64 xs:h-64 radar-pulse">
+            <!-- 绘制雷达图背景 -->
+            ${createRadarBackground(dims.length)}
+            <!-- 绘制数据 -->
+            ${createRadarPath(radarData, dims.length)}
+            <!-- 绘制标签 -->
+            ${createRadarLabels(dims)}
+          </svg>
+        </div>
+        <div class="w-full lg:w-1/2 space-y-3 xs:space-y-4">
+          ${dims.map(d => `
+            <div>
+              <div class="flex justify-between mb-1 text-xs xs:text-sm">
+                <span class="flex items-center gap-2"><i class="fas ${d.icon} text-accent-400"></i> ${d.name}</span>
+                <span class="font-bold">${scores[d.id]}%</span>
+              </div>
+              <div class="w-full bg-gray-700 rounded-full h-2">
+                <div class="bg-gradient-to-r from-cyan-500 to-blue-500 h-2 rounded-full transition-all duration-1000" style="width: ${scores[d.id]}%"></div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+    
+    <!-- 职业推荐 -->
+    <div class="glass-panel rounded-2xl xs:rounded-3xl p-6 xs:p-8 mb-6 xs:mb-8 result-item" style="animation-delay: 0.3s">
+      <h3 class="text-lg xs:text-xl font-bold mb-4 xs:mb-6 flex items-center gap-2">
+        <i class="fas fa-briefcase text-warm-400"></i> 职业倾向
+      </h3>
+      <div class="grid grid-cols-2 xs:grid-cols-3 gap-3 xs:gap-4">
+        ${getRecommendation('career').map(c => `
+          <div class="bg-white/5 p-2 xs:p-3 rounded-xl text-center hover:bg-white/10 transition-colors cursor-pointer text-xs xs:text-sm">
+            <i class="fas fa-star text-warm-400 text-xs mr-1"></i> ${c}
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    
+    <!-- 爱好推荐 -->
+    <div class="glass-panel rounded-2xl xs:rounded-3xl p-6 xs:p-8 result-item" style="animation-delay: 0.4s">
+      <h3 class="text-lg xs:text-xl font-bold mb-4 xs:mb-6 flex items-center gap-2">
+        <i class="fas fa-heart text-pink-400"></i> 推荐爱好
+      </h3>
+      <div class="flex flex-wrap gap-2 xs:gap-3">
+        ${getRecommendation('hobby').map(h => `
+          <span class="px-3 xs:px-4 py-1.5 xs:py-2 rounded-full bg-pink-500/10 border border-pink-500/30 text-pink-300 text-xs xs:text-sm hover:bg-pink-500/20 transition-colors">${h}</span>
+        `).join('')}
+      </div>
+    </div>
+  `;
 }
 
 function getTypeDescription() {
-let traits = [];
-if (scores['E'] > 50) traits.push('外向'); else traits.push('内向');
-if (scores['O'] > 50) traits.push('开放'); else traits.push('务实');
-if (scores['C'] > 50) traits.push('尽责'); else traits.push('灵活');
-return {
-type: traits.join('的') + '者',
-desc: `你是一个${traits.join('、')}的人，在人群中展现出独特的魅力。`
-};
+  let traits = [];
+  if (scores['E'] > 50) traits.push('外向'); else traits.push('内向');
+  if (scores['O'] > 50) traits.push('开放'); else traits.push('务实');
+  if (scores['C'] > 50) traits.push('尽责'); else traits.push('灵活');
+  
+  return {
+    type: traits.join('的') + '者',
+    desc: `你是一个${traits.join('、')}的人，在人群中展现出独特的魅力。`
+  };
 }
 
 function getRecommendation(type) {
-let recs = new Set();
-Object.keys(scores).forEach(k => {
-const score = scores[k];
-const key = score > 60 ? `high_${k}` : (score < 40 ? `low_${k}` : null);
-if (key && recommendations[type][key]) {
-recommendations[type][key].forEach(item => recs.add(item));
-}
-});
-return Array.from(recs).slice(0, 9);
+  let recs = new Set();
+  Object.keys(scores).forEach(k => {
+    const score = scores[k];
+    const key = score > 60 ? `high_${k}` : (score < 40 ? `low_${k}` : null);
+    if (key && recommendations[type][key]) {
+      recommendations[type][key].forEach(item => recs.add(item));
+    }
+  });
+  return Array.from(recs).slice(0, 9);
 }
 
 // 雷达图绘制辅助函数
 function createRadarBackground(count) {
-let html = '';
-for (let i = 1; i <= 5; i++) {
-const r = 80 * (i / 5);
-html += `<circle cx="100" cy="100" r="${r}" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>`;
-}
-return html;
+  let html = '';
+  for (let i = 1; i <= 5; i++) {
+    const r = 80 * (i / 5);
+    html += `<circle cx="100" cy="100" r="${r}" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>`;
+  }
+  return html;
 }
 
 function createRadarPath(data, count) {
-const angleStep = 360 / count;
-let points = data.map((val, i) => {
-const angle = (angleStep * i - 90) * (Math.PI / 180);
-const r = (val / 100) * 80;
-return `${100 + r * Math.cos(angle)},${100 + r * Math.sin(angle)}`;
-});
-return `<polygon points="${points.join(' ')}" fill="rgba(14, 165, 233, 0.3)" stroke="#0ea5e9" stroke-width="2" />`;
+  const angleStep = 360 / count;
+  let points = data.map((val, i) => {
+    const angle = (angleStep * i - 90) * (Math.PI / 180);
+    const r = (val / 100) * 80;
+    return `${100 + r * Math.cos(angle)},${100 + r * Math.sin(angle)}`;
+  });
+  return `<polygon points="${points.join(' ')}" fill="rgba(14, 165, 233, 0.3)" stroke="#0ea5e9" stroke-width="2" />`;
 }
 
 function createRadarLabels(dims) {
-const angleStep = 360 / dims.length;
-return dims.map((d, i) => {
-const angle = (angleStep * i - 90) * (Math.PI / 180);
-const x = 100 + 95 * Math.cos(angle);
-const y = 100 + 95 * Math.sin(angle);
-return `<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="10" font-weight="bold">${d.name}</text>`;
-}).join('');
+  const angleStep = 360 / dims.length;
+  return dims.map((d, i) => {
+    const angle = (angleStep * i - 90) * (Math.PI / 180);
+    const x = 100 + 95 * Math.cos(angle);
+    const y = 100 + 95 * Math.sin(angle);
+    return `<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="10" font-weight="bold">${d.name}</text>`;
+  }).join('');
+}
+
+// 分享功能
+function shareResult(platform) {
+  const text = `我在"深度人格探索"测试中发现自己是${getTypeDescription().type}！快来探索你的人格类型吧！`;
+  const url = window.location.href;
+  
+  switch(platform) {
+    case 'wechat':
+      alert('请截图分享到微信朋友圈');
+      break;
+    case 'weibo':
+      window.open(`https://service.weibo.com/share/share.php?title=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+      break;
+    case 'copy':
+      navigator.clipboard.writeText(text + ' ' + url).then(() => {
+        alert('链接已复制到剪贴板');
+      });
+      break;
+  }
+}
+
+// 趣味测试功能
+function startMiniTest(type) {
+  currentMiniTest = type;
+  currentMiniQuestion = 0;
+  miniTestAnswers = {};
+  
+  document.getElementById('home-page').classList.add('hidden');
+  document.getElementById('mini-test-page').classList.remove('hidden');
+  
+  renderMiniQuestion();
+}
+
+function renderMiniQuestion() {
+  const test = miniTests[currentMiniTest];
+  const question = test.questions[currentMiniQuestion];
+  
+  document.getElementById('mini-test-title').textContent = test.title;
+  
+  let content = `
+    <p class="text-lg xs:text-xl mb-6 xs:mb-8">${question.text}</p>
+    <div class="grid grid-cols-1 xs:grid-cols-2 gap-4">
+  `;
+  
+  question.options.forEach((opt, idx) => {
+    const key = currentMiniTest === 'color' ? 'color' : 'animal';
+    content += `
+      <div class="option-card glass-panel p-4 rounded-xl cursor-pointer ${miniTestAnswers[currentMiniQuestion] === idx ? 'selected' : ''}" onclick="selectMiniOption(${idx})">
+        <p class="font-bold mb-2">${opt.text}</p>
+        <p class="text-xs text-gray-400">${opt.desc}</p>
+      </div>
+    `;
+  });
+  
+  content += '</div>';
+  
+  content += `
+    <button onclick="nextMiniQuestion()" class="mt-6 xs:mt-8 w-full btn-icon bg-accent-500 hover:bg-accent-600 text-white font-bold py-3 rounded-xl ${miniTestAnswers[currentMiniQuestion] === undefined ? 'opacity-50 cursor-not-allowed' : ''}">
+      ${currentMiniQuestion < test.questions.length - 1 ? '下一题' : '查看结果'}
+    </button>
+  `;
+  
+  document.getElementById('mini-test-content').innerHTML = content;
+}
+
+function selectMiniOption(idx) {
+  miniTestAnswers[currentMiniQuestion] = idx;
+  renderMiniQuestion();
+}
+
+function nextMiniQuestion() {
+  if (miniTestAnswers[currentMiniQuestion] === undefined) return;
+  
+  const test = miniTests[currentMiniTest];
+  
+  if (currentMiniQuestion < test.questions.length - 1) {
+    currentMiniQuestion++;
+    renderMiniQuestion();
+  } else {
+    showMiniResult();
+  }
+}
+
+function showMiniResult() {
+  const test = miniTests[currentMiniTest];
+  const key = currentMiniTest === 'color' ? 'color' : 'animal';
+  const results = {};
+  
+  test.questions.forEach((q, idx) => {
+    const selected = q.options[miniTestAnswers[idx]];
+    const value = selected[key];
+    results[value] = (results[value] || 0) + 1;
+  });
+  
+  const maxResult = Object.entries(results).sort((a, b) => b[1] - a[1])[0];
+  
+  let resultHTML = '';
+  
+  if (currentMiniTest === 'color') {
+    const colorMeanings = {
+      '蓝色': { desc: '你是一个平静、理性的人，善于思考和分析。', icon: 'fa-water' },
+      '橙色': { desc: '你充满活力和热情，喜欢与人交往。', icon: 'fa-sun' },
+      '绿色': { desc: '你热爱自然，富有创造力和生命力。', icon: 'fa-leaf' },
+      '红色': { desc: '你充满力量和决心，是一个天生的领导者。', icon: 'fa-fire' },
+      '黄色': { desc: '你乐观开朗，善于与人合作。', icon: 'fa-star' },
+      '紫色': { desc: '你富有创意和艺术气质，追求独特表达。', icon: 'fa-magic' }
+    };
+    
+    const result = colorMeanings[maxResult[0]];
+    resultHTML = `
+      <div class="mb-8">
+        <div class="w-24 h-24 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center mx-auto mb-4">
+          <i class="fas ${result.icon} text-4xl text-white"></i>
+        </div>
+        <h3 class="text-2xl font-bold mb-2">你的性格色彩：${maxResult[0]}</h3>
+        <p class="text-gray-400">${result.desc}</p>
+      </div>
+    `;
+  } else {
+    const animalMeanings = {
+      '狮子': { desc: '你是一个天生的领导者，勇敢果断。', icon: 'fa-paw' },
+      '猫头鹰': { desc: '你智慧深沉，善于分析和思考。', icon: 'fa-eye' },
+      '海豚': { desc: '你灵活聪明，善于适应各种环境。', icon: 'fa-fish' },
+      '乌龟': { desc: '你稳健踏实，做事有条不紊。', icon: 'fa-shield-alt' },
+      '狼': { desc: '你有很强的团队意识，是天生的领袖。', icon: 'fa-users' },
+      '蜜蜂': { desc: '你勤劳踏实，善于团队合作。', icon: 'fa-spell-check' },
+      '狐狸': { desc: '你聪明机智，富有创造力。', icon: 'fa-lightbulb' },
+      '蚂蚁': { desc: '你踏实肯干，是值得信赖的伙伴。', icon: 'fa-hands-helping' },
+      '孔雀': { desc: '你魅力四射，喜欢成为焦点。', icon: 'fa-feather-alt' },
+      '猫': { desc: '你独立自主，有自己的节奏。', icon: 'fa-cat' },
+      '猴子': { desc: '你聪明好奇，喜欢探索新事物。', icon: 'fa-search' },
+      '鹿': { desc: '你温和自然，与人为善。', icon: 'fa-heart' }
+    };
+    
+    const result = animalMeanings[maxResult[0]];
+    resultHTML = `
+      <div class="mb-8">
+        <div class="w-24 h-24 rounded-full bg-gradient-to-r from-green-500 to-teal-500 flex items-center justify-center mx-auto mb-4">
+          <i class="fas ${result.icon} text-4xl text-white"></i>
+        </div>
+        <h3 class="text-2xl font-bold mb-2">你的动物灵魂：${maxResult[0]}</h3>
+        <p class="text-gray-400">${result.desc}</p>
+      </div>
+    `;
+  }
+  
+  document.getElementById('mini-test-content').innerHTML = `
+    ${resultHTML}
+    <button onclick="backToHome()" class="w-full btn-icon bg-gray-700/50 hover:bg-gray-600 text-white font-bold py-3 rounded-xl mt-4">
+      返回首页
+    </button>
+  `;
+}
+
+function backToHome() {
+  document.getElementById('mini-test-page').classList.add('hidden');
+  document.getElementById('home-page').classList.remove('hidden');
 }
 
 function resetTest() {
-document.getElementById('home-page').classList.remove('hidden');
-document.getElementById('test-page').classList.add('hidden');
-document.getElementById('result-page').classList.add('hidden');
+  document.getElementById('home-page').classList.remove('hidden');
+  document.getElementById('test-page').classList.add('hidden');
+  document.getElementById('result-page').classList.add('hidden');
 }
-
 </script>
 </body>
 </html>
