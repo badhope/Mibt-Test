@@ -1,5 +1,4 @@
-import { dimensions, questions, miniTests, recommendations } from './data.js';
-import { saveProgress, loadProgress, clearProgress, saveTestHistory, loadTestHistory, clearTestHistory, exportData, importData, loadSettings, saveSettings, clearAllData, getStorageUsage } from './storage.js';
+// 移除ES模块导入，使用全局变量
 
 // 全局状态变量
 let currentTestMode = 'standard';
@@ -10,13 +9,19 @@ let miniTestUserAnswers = {};
 let currentMiniTestType = null;
 let currentMiniQuestionIndex = 0;
 
-export function init() {
+function init() {
+    console.log('Core init function started');
+    
+    // 初始化DOM元素
+    initDOM();
+    
+    // 暴露函数到全局
     window.startTest = startTest;
     window.selectOption = selectOption;
     window.nextQuestion = nextQuestion;
     window.prevQuestion = prevQuestion;
     window.resumeTest = handleResumeTest;
-    window.clearSavedData = window.clearSavedData;
+    window.clearSavedData = clearSavedData;
     window.confirmSaveAndExit = confirmSaveAndExit;
     window.startMiniTest = startMiniTest;
     window.backToHome = backToHome;
@@ -28,6 +33,16 @@ export function init() {
     window.toggleSetting = toggleSetting;
     window.handleImport = handleImport;
     window.clearAllUserData = clearAllUserData;
+    window.clearAllData = clearAllData;
+    
+    // 测试函数暴露
+    console.log('Core functions initialized:', {
+        startTest: typeof startTest,
+        backToHome: typeof backToHome,
+        openControlPanel: typeof openControlPanel
+    });
+    
+    console.log('Core init function completed');
 }
 
 // 显示加载动画
@@ -51,7 +66,7 @@ function hideLoading() {
     }
 }
 
-export function startTest(mode) {
+function startTest(mode) {
     const loading = showLoading('准备测试...');
     
     setTimeout(() => {
@@ -83,7 +98,7 @@ export function startTest(mode) {
     }, 800);
 }
 
-export function showTestPage() {
+function showTestPage() {
     document.getElementById('home-page').classList.add('hidden');
     document.getElementById('result-page').classList.add('hidden');
     document.getElementById('mini-test-page').classList.add('hidden');
@@ -91,32 +106,54 @@ export function showTestPage() {
 }
 
 // 缓存DOM元素以减少重复查询
-const DOM = {
-    progressText: document.getElementById('progress-text'),
-    progressBar: document.getElementById('progress-bar'),
-    dimensionIcon: document.getElementById('dimension-icon'),
-    dimensionLabel: document.getElementById('dimension-label'),
-    questionText: document.getElementById('question-text'),
-    optionsContainer: document.getElementById('options-container'),
-    prevBtn: document.getElementById('prev-btn'),
-    nextBtn: document.getElementById('next-btn')
-};
+let DOM = {};
 
-// 绑定事件委托
-if (DOM.optionsContainer) {
-    DOM.optionsContainer.addEventListener('click', (e) => {
-        const optionItem = e.target.closest('.option-item');
-        if (optionItem) {
-            const idx = parseInt(optionItem.dataset.index);
-            selectOption(idx);
+// 初始化DOM元素
+function initDOM() {
+    try {
+        console.log('Initializing DOM elements');
+        DOM = {
+            progressText: document.getElementById('progress-text'),
+            progressBar: document.getElementById('progress-bar'),
+            dimensionIcon: document.getElementById('dimension-icon'),
+            dimensionLabel: document.getElementById('dimension-label'),
+            questionText: document.getElementById('question-text'),
+            optionsContainer: document.getElementById('options-container'),
+            prevBtn: document.getElementById('prev-btn'),
+            nextBtn: document.getElementById('next-btn')
+        };
+        
+        console.log('DOM elements initialized:', {
+            progressText: !!DOM.progressText,
+            progressBar: !!DOM.progressBar,
+            optionsContainer: !!DOM.optionsContainer
+        });
+        
+        // 绑定事件委托
+        if (DOM.optionsContainer) {
+            DOM.optionsContainer.addEventListener('click', (e) => {
+                const optionItem = e.target.closest('.option-item');
+                if (optionItem) {
+                    const idx = parseInt(optionItem.dataset.index);
+                    selectOption(idx);
+                }
+            });
         }
-    });
+        console.log('DOM initialization completed');
+    } catch (error) {
+        console.error('Error in initDOM:', error);
+    }
 }
 
-export function renderQuestion() {
+function renderQuestion() {
     const q = questions[currentTestMode][currentQuestionIndex];
     const total = questions[currentTestMode].length;
     const dim = dimensions[currentTestMode].find(d => d.id === q.dimension);
+    
+    // 确保DOM元素已初始化
+    if (!DOM.progressText || !DOM.progressBar || !DOM.dimensionIcon || !DOM.dimensionLabel || !DOM.questionText || !DOM.optionsContainer || !DOM.prevBtn || !DOM.nextBtn) {
+        initDOM();
+    }
     
     // 批量更新DOM
     DOM.progressText.textContent = `${currentQuestionIndex + 1} / ${total}`;
@@ -151,7 +188,7 @@ export function renderQuestion() {
         : '下一题 <i class="fas fa-arrow-right ml-2"></i>';
 }
 
-export function selectOption(idx) {
+function selectOption(idx) {
     userAnswers[currentQuestionIndex] = idx;
     saveProgress({
         mode: currentTestMode,
@@ -170,7 +207,7 @@ export function selectOption(idx) {
     renderQuestion();
 }
 
-export function nextQuestion() {
+function nextQuestion() {
     if (userAnswers[currentQuestionIndex] === undefined) return;
     
     const q = questions[currentTestMode][currentQuestionIndex];
@@ -208,7 +245,7 @@ export function nextQuestion() {
     }
 }
 
-export function prevQuestion() {
+function prevQuestion() {
     if (currentQuestionIndex > 0) {
         const q = questions[currentTestMode][currentQuestionIndex];
         if (userAnswers[currentQuestionIndex] !== undefined) {
@@ -243,7 +280,7 @@ export function prevQuestion() {
     }
 }
 
-export function handleResumeTest() {
+function handleResumeTest() {
     const progress = loadProgress();
     if (progress) {
         currentTestMode = progress.mode;
@@ -256,7 +293,7 @@ export function handleResumeTest() {
     }
 }
 
-export function finishTest() {
+function finishTest() {
     clearProgress();
     calculateFinalScores();
     
@@ -290,7 +327,7 @@ export function finishTest() {
     });
 }
 
-export function calculateFinalScores() {
+function calculateFinalScores() {
     const maxScores = {};
     questions[currentTestMode].forEach(q => {
         maxScores[q.dimension] = (maxScores[q.dimension] || 0) + 5;
@@ -302,7 +339,7 @@ export function calculateFinalScores() {
     });
 }
 
-export function showResults() {
+function showResults() {
     const resultPage = document.getElementById('result-page');
     resultPage.classList.remove('hidden');
     document.getElementById('test-page').classList.add('hidden');
@@ -421,7 +458,7 @@ export function showResults() {
     `;
 }
 
-export function confirmSaveAndExit() {
+function confirmSaveAndExit() {
     saveProgress({
         mode: currentTestMode,
         index: currentQuestionIndex,
@@ -443,7 +480,7 @@ export function confirmSaveAndExit() {
     setTimeout(() => location.reload(), 1000);
 }
 
-export function startMiniTest(type) {
+function startMiniTest(type) {
     currentMiniTestType = type;
     currentMiniQuestionIndex = 0;
     miniTestUserAnswers = {};
@@ -455,7 +492,7 @@ export function startMiniTest(type) {
     renderMiniQuestion();
 }
 
-export function renderMiniQuestion() {
+function renderMiniQuestion() {
     const miniTest = miniTests[currentMiniTestType];
     const question = miniTest.questions[currentMiniQuestionIndex];
     
@@ -488,7 +525,7 @@ export function renderMiniQuestion() {
     `;
 }
 
-export function selectMiniOption(idx) {
+function selectMiniOption(idx) {
     miniTestUserAnswers[currentMiniQuestionIndex] = idx;
     
     anime({
@@ -499,14 +536,14 @@ export function selectMiniOption(idx) {
     });
 }
 
-export function nextMiniQuestion() {
+function nextMiniQuestion() {
     if (miniTestUserAnswers[currentMiniQuestionIndex] === undefined) return;
     
     currentMiniQuestionIndex++;
     renderMiniQuestion();
 }
 
-export function showMiniTestResult() {
+function showMiniTestResult() {
     if (miniTestUserAnswers[currentMiniQuestionIndex] === undefined) return;
     
     const miniTest = miniTests[currentMiniTestType];
@@ -538,7 +575,7 @@ export function showMiniTestResult() {
     `;
 }
 
-export function backToHome() {
+function backToHome() {
     document.getElementById('test-page').classList.add('hidden');
     document.getElementById('result-page').classList.add('hidden');
     document.getElementById('mini-test-page').classList.add('hidden');
@@ -546,7 +583,7 @@ export function backToHome() {
     document.getElementById('home-page').classList.remove('hidden');
 }
 
-export function shareResults() {
+function shareResults() {
     const topDimensions = Object.entries(dimensionScores)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 3);
@@ -594,7 +631,7 @@ function copyShareLink(text, url) {
 }
 
 // 打开控制面板
-export function openControlPanel() {
+function openControlPanel() {
     document.getElementById('home-page').classList.add('hidden');
     document.getElementById('control-panel-page').classList.remove('hidden');
     
@@ -647,7 +684,7 @@ function renderSettings() {
 }
 
 // 切换设置
-export function toggleSetting(key) {
+function toggleSetting(key) {
     const checkbox = document.getElementById(key);
     const settings = loadSettings();
     settings[key] = checkbox.checked;
@@ -732,7 +769,7 @@ function renderStorageInfo() {
 }
 
 // 处理数据导入
-export function handleImport(event) {
+function handleImport(event) {
     const file = event.target.files[0];
     if (!file) return;
     
@@ -772,7 +809,7 @@ export function handleImport(event) {
 }
 
 // 清除所有数据
-export function clearAllUserData() {
+function clearAllUserData() {
     if (confirm('确定要清除所有数据吗？此操作不可恢复！')) {
         const result = window.clearAllData();
         if (result) {

@@ -128,7 +128,7 @@
                         <span>🎯 5维度</span>
                         <span>⚡ 极速</span>
                     </div>
-                    <button class="w-full py-3 bg-gradient-to-r from-green-500/20 to-emerald-500/20 hover:from-green-500/40 hover:to-emerald-500/40 rounded-xl text-green-300 font-bold transition-all">开始探索 <i class="fas fa-bolt ml-2"></i></button>
+                    <button onclick="alert('开始探索按钮点击成功！'); console.log('开始探索按钮点击成功');" class="w-full py-3 bg-gradient-to-r from-green-500/20 to-emerald-500/20 hover:from-green-500/40 hover:to-emerald-500/40 rounded-xl text-green-300 font-bold transition-all">开始探索 <i class="fas fa-bolt ml-2"></i></button>
                 </div>
                 
                 <!-- 标准模式 -->
@@ -330,7 +330,41 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" defer></script>
     
     <!-- 引入核心逻辑 -->
-    <script type="module" src="js/main.js" defer></script>
+    <script src="js/data.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/core.js"></script>
+    <script src="js/main.js"></script>
+    
+    <!-- 测试脚本 -->
+    <script>
+        console.log('HTML inline script executed');
+        
+        // 直接测试按钮点击功能
+        function testButtonClick() {
+            alert('按钮点击测试成功！');
+            console.log('按钮点击测试成功');
+        }
+        
+        // 覆盖原始的onclick事件，直接测试
+        window.onload = function() {
+            console.log('Window loaded');
+            // 测试按钮点击
+            const startButton = document.querySelector('button');
+            if (startButton) {
+                console.log('Start button found');
+                // 保存原始的onclick事件
+                const originalOnClick = startButton.onclick;
+                // 添加测试点击事件
+                startButton.onclick = function() {
+                    alert('开始探索按钮点击成功！');
+                    console.log('开始探索按钮点击成功');
+                    if (originalOnClick) {
+                        originalOnClick();
+                    }
+                };
+            }
+        };
+    </script>
     
     <!-- 注册Service Worker -->
     <script>

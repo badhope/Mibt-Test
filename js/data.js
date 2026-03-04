@@ -1,5 +1,5 @@
 // 维度定义
-export const dimensions = {
+const dimensions = {
     quick: [
         { id: 'E', name: '外向性', icon: '🌐', desc: '社交能量' },
         { id: 'O', name: '开放性', icon: '💡', desc: '创新思维' },
@@ -38,7 +38,7 @@ export const dimensions = {
 };
 
 // 简化版题库
-export const questions = {
+const questions = {
     quick: [
         { dimension: 'E', text: '在热闹的聚会上，你通常会：', options: [
             { text: '🎉 主动结识新朋友，享受其中', score: 5 },
@@ -635,7 +635,7 @@ questions.expert = [
 ];
 
 // 趣味测试数据
-export const miniTests = {
+const miniTests = {
     color: {
         title: '🎨 性格色彩测试',
         questions: [
@@ -753,7 +753,7 @@ export const miniTests = {
 };
 
 // 职业推荐
-export const recommendations = {
+const recommendations = {
     career: {
         high_E: ['🎯 销售总监', '📢 公关经理', '🎪 活动策划', '🎤 主持人', '📚 企业培训师'],
         low_E: ['💻 数据分析师', '✍️ 作家', '👨‍💻 程序员', '🔬 研究员', '📚 图书管理员'],
@@ -791,3 +791,9 @@ export const recommendations = {
         high_G: ['📚 读书会', '💻 在线课程', '🔄 技能交换', '🎯 挑战新事物', '📝 写日记']
     }
 };
+
+// 暴露数据到全局
+window.dimensions = dimensions;
+window.questions = questions;
+window.miniTests = miniTests;
+window.recommendations = recommendations;

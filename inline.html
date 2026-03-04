@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>内联JavaScript测试</title>
+</head>
+<body>
+    <h1>内联JavaScript测试</h1>
+    <button onclick="testFunction()">测试按钮</button>
+    
+    <script>
+        console.log('Inline JavaScript loaded');
+        
+        function testFunction() {
+            console.log('Test button clicked');
+            alert('按钮点击成功！');
+        }
+        
+        console.log('Function defined:', typeof testFunction);
+    </script>
+</body>
+</html>

@@ -29,7 +29,7 @@ function checkStorageSize(data) {
     return dataSize < maxSize;
 }
 
-export function saveProgress(data) {
+function saveProgress(data) {
     const saveData = {
         mode: data.mode,
         index: data.index,
@@ -45,7 +45,7 @@ export function saveProgress(data) {
     return false;
 }
 
-export function loadProgress() {
+function loadProgress() {
     if (!checkExpiry()) {
         return null;
     }
@@ -62,11 +62,11 @@ export function loadProgress() {
     return null;
 }
 
-export function clearProgress() {
+function clearProgress() {
     localStorage.removeItem(STORAGE_KEY);
 }
 
-export function checkResumeProgress() {
+function checkResumeProgress() {
     const progress = loadProgress();
     if (progress) {
         const card = document.getElementById('resume-card');
@@ -83,11 +83,11 @@ export function checkResumeProgress() {
     }
 }
 
-export function resumeTest() {
+function resumeTest() {
     return loadProgress();
 }
 
-export function clearSavedData() {
+function clearSavedData() {
     clearProgress();
     const card = document.getElementById('resume-card');
     if (card) {
@@ -120,7 +120,7 @@ function saveTestHistory(result) {
 }
 
 // 加载测试历史
-export function loadTestHistory() {
+function loadTestHistory() {
     try {
         const data = localStorage.getItem(HISTORY_KEY);
         return data ? JSON.parse(data) : [];
@@ -131,12 +131,12 @@ export function loadTestHistory() {
 }
 
 // 清除测试历史
-export function clearTestHistory() {
+function clearTestHistory() {
     localStorage.removeItem(HISTORY_KEY);
 }
 
 // 导出数据
-export function exportData() {
+function exportData() {
     try {
         const data = {
             progress: loadProgress(),
@@ -161,7 +161,7 @@ export function exportData() {
 }
 
 // 导入数据
-export function importData(jsonData) {
+function importData(jsonData) {
     try {
         const data = JSON.parse(jsonData);
         
@@ -185,7 +185,7 @@ export function importData(jsonData) {
 }
 
 // 加载设置
-export function loadSettings() {
+function loadSettings() {
     try {
         const data = localStorage.getItem(SETTINGS_KEY);
         return data ? JSON.parse(data) : {
@@ -204,7 +204,7 @@ export function loadSettings() {
 }
 
 // 保存设置
-export function saveSettings(settings) {
+function saveSettings(settings) {
     try {
         localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
         return true;
@@ -215,7 +215,7 @@ export function saveSettings(settings) {
 }
 
 // 清除所有数据
-export function clearAllData() {
+function clearAllData() {
     try {
         localStorage.removeItem(STORAGE_KEY);
         localStorage.removeItem(HISTORY_KEY);
@@ -228,7 +228,7 @@ export function clearAllData() {
 }
 
 // 获取存储使用情况
-export function getStorageUsage() {
+function getStorageUsage() {
     try {
         let totalSize = 0;
         for (let key in localStorage) {
@@ -246,3 +246,20 @@ export function getStorageUsage() {
         return null;
     }
 }
+
+// 暴露函数到全局
+window.saveProgress = saveProgress;
+window.loadProgress = loadProgress;
+window.clearProgress = clearProgress;
+window.checkResumeProgress = checkResumeProgress;
+window.resumeTest = resumeTest;
+window.clearSavedData = clearSavedData;
+window.saveTestHistory = saveTestHistory;
+window.loadTestHistory = loadTestHistory;
+window.clearTestHistory = clearTestHistory;
+window.exportData = exportData;
+window.importData = importData;
+window.loadSettings = loadSettings;
+window.saveSettings = saveSettings;
+window.clearAllData = clearAllData;
+window.getStorageUsage = getStorageUsage;

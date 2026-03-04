@@ -1,5 +1,4 @@
-import { init } from './core.js';
-import { checkResumeProgress, clearSavedData, clearAllData, exportData, importData } from './storage.js';
+// 移除ES模块导入，使用全局函数
 
 // 初始化粒子背景
 function initParticles() {
@@ -53,15 +52,20 @@ function initParticles() {
     }, 500);
 }
 
+// 测试代码
+console.log('main.js loaded');
+console.log('init function:', typeof init);
+console.log('checkResumeProgress function:', typeof checkResumeProgress);
+
 // 页面加载完成后初始化
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOMContentLoaded event fired');
     initParticles();
     checkResumeProgress();
-    init();
-    
-    // 暴露函数到全局
-    window.clearSavedData = clearSavedData;
-    window.clearAllData = clearAllData;
-    window.exportData = exportData;
-    window.importData = importData;
+    if (typeof init === 'function') {
+        init();
+        console.log('init function executed successfully');
+    } else {
+        console.log('init function not found');
+    }
 });
