@@ -214,10 +214,224 @@ body {
 ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); }
 ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #8b5cf6, #ec4899); border-radius: 4px; }
 
+/* 加载动画 */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 10, 15, 0.95);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.3s ease;
+}
+
+.loading-spinner {
+    width: 60px;
+    height: 60px;
+    border: 4px solid rgba(139, 92, 246, 0.3);
+    border-top: 4px solid #8b5cf6;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+.loading-text {
+    color: #e2e8f0;
+    font-size: 18px;
+    font-weight: 500;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 页面切换动画 */
+.page-transition-enter {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.page-transition-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.page-transition-exit {
+    opacity: 1;
+}
+
+.page-transition-exit-active {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* 题目切换动画 */
+.question-enter {
+    opacity: 0;
+    transform: translateX(30px);
+}
+
+.question-enter-active {
+    opacity: 1;
+    transform: translateX(0);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.question-exit {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.question-exit-active {
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .text-4xl { font-size: 2rem; }
+    .text-5xl { font-size: 2.5rem; }
+    .text-6xl { font-size: 3rem; }
+    
+    .grid-cols-3 { grid-template-columns: 1fr; }
+    .grid-cols-4 { grid-template-columns: repeat(2, 1fr); }
+    
+    .github-corner {
+        display: none;
+    }
+    
+    /* 触控优化 */
+    button {
+        min-height: 48px;
+        touch-action: manipulation;
+    }
+    
+    .option-item {
+        min-height: 56px;
+    }
+}
+
 @media (max-width: 640px) {
     .glass-card { padding: 1rem; }
+    .text-4xl { font-size: 1.75rem; }
+    .text-5xl { font-size: 2rem; }
+    .text-6xl { font-size: 2.5rem; }
+    
+    .grid-cols-2 { grid-template-columns: 1fr; }
+    
+    #question-container {
+        padding: 1rem;
+    }
+    
+    .floating-decoration {
+        font-size: 1.5rem;
+    }
+    
+    .test-mode-card {
+        padding: 1.5rem;
+    }
+    
+    /* 底部导航优化 */
+    #test-page .flex.justify-between {
+        gap: 1rem;
+    }
+    
+    #test-page button {
+        flex: 1;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
     .text-4xl { font-size: 1.5rem; }
-    .text-5xl { font-size: 1.875rem; }
+    .text-5xl { font-size: 1.75rem; }
+    .text-6xl { font-size: 2rem; }
+    
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .option-item {
+        padding: 1rem;
+        min-height: 64px;
+    }
+    
+    .option-item .flex {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .option-item .w-10 {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+    
+    /* 进度条优化 */
+    .progress-bar {
+        height: 3px;
+    }
+    
+    /* 保存按钮优化 */
+    #test-page .glass-card.px-4 {
+        padding: 0.75rem;
+        font-size: 0.8rem;
+    }
+}
+
+/* 横竖屏切换处理 */
+@media (orientation: landscape) {
+    .grid-cols-3 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .grid-cols-4 {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    #question-container {
+        max-height: 60vh;
+        overflow-y: auto;
+    }
+}
+
+@media (orientation: portrait) {
+    .grid-cols-3 {
+        grid-template-columns: 1fr;
+    }
+    
+    .grid-cols-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* 触控反馈 */
+@media (hover: none) and (pointer: coarse) {
+    button:active {
+        transform: scale(0.95);
+        transition: transform 0.1s ease;
+    }
+    
+    .option-item:active {
+        transform: scale(0.98);
+        transition: transform 0.1s ease;
+    }
+    
+    .test-mode-card:active {
+        transform: scale(0.98);
+        transition: transform 0.1s ease;
+    }
 }
 
 /* ====== 新增：右下角点赞提示样式 ====== */

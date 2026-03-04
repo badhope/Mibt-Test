@@ -189,10 +189,10 @@
                             <div class="text-sm font-bold">元素属性</div>
                             <div class="text-xs text-gray-500">3分钟</div>
                         </div>
-                        <div class="bg-gradient-to-br from-purple-500/10 to-pink-500/10 p-4 rounded-xl text-center cursor-pointer hover:scale-105 transition-all" onclick="startMiniTest('emotion')">
-                            <div class="text-3xl mb-2">💝</div>
-                            <div class="text-sm font-bold">情绪光谱</div>
-                            <div class="text-xs text-gray-500">3分钟</div>
+                        <div class="bg-gradient-to-br from-purple-500/10 to-pink-500/10 p-4 rounded-xl text-center cursor-pointer hover:scale-105 transition-all" onclick="openControlPanel()">
+                            <div class="text-3xl mb-2">⚙️</div>
+                            <div class="text-sm font-bold">控制面板</div>
+                            <div class="text-xs text-gray-500">设置管理</div>
                         </div>
                     </div>
                 </div>
@@ -255,6 +255,65 @@
                 <i class="fas fa-home mr-2"></i> 返回首页
             </button>
         </div>
+        
+        <!-- ========== 控制面板页面 ========== -->
+        <div id="control-panel-page" class="hidden flex-1 max-w-3xl mx-auto w-full">
+            <div class="text-center mb-8 animate__animated animate__fadeInDown">
+                <h1 class="text-3xl md:text-4xl font-bold mb-4 shining-title">控制面板</h1>
+                <p class="text-gray-400">管理设置、数据和测试历史</p>
+            </div>
+            
+            <div class="glass-card rounded-2xl p-6 mb-6 animate__animated animate__fadeIn">
+                <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                    <i class="fas fa-cog text-purple-400"></i> 系统设置
+                </h3>
+                <div class="space-y-4" id="settings-container">
+                    <!-- 设置项将通过JS动态生成 -->
+                </div>
+            </div>
+            
+            <div class="glass-card rounded-2xl p-6 mb-6 animate__animated animate__fadeIn">
+                <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                    <i class="fas fa-history text-blue-400"></i> 测试历史
+                </h3>
+                <div id="history-container" class="space-y-4">
+                    <!-- 历史记录将通过JS动态生成 -->
+                </div>
+            </div>
+            
+            <div class="glass-card rounded-2xl p-6 mb-6 animate__animated animate__fadeIn">
+                <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                    <i class="fas fa-database text-green-400"></i> 数据管理
+                </h3>
+                <div class="space-y-4">
+                    <button onclick="exportData()" class="w-full py-3 bg-gradient-to-r from-green-500/20 to-emerald-500/20 hover:from-green-500/40 hover:to-emerald-500/40 rounded-xl text-green-300 font-bold transition-all">
+                        <i class="fas fa-download mr-2"></i> 导出数据
+                    </button>
+                    <input type="file" id="import-file" accept=".json" class="hidden" onchange="handleImport(event)">
+                    <button onclick="document.getElementById('import-file').click()" class="w-full py-3 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 hover:from-blue-500/40 hover:to-cyan-500/40 rounded-xl text-blue-300 font-bold transition-all">
+                        <i class="fas fa-upload mr-2"></i> 导入数据
+                    </button>
+                    <button onclick="clearAllUserData()" class="w-full py-3 bg-gradient-to-r from-red-500/20 to-orange-500/20 hover:from-red-500/40 hover:to-orange-500/40 rounded-xl text-red-300 font-bold transition-all">
+                        <i class="fas fa-trash mr-2"></i> 清除所有数据
+                    </button>
+                </div>
+            </div>
+            
+            <div class="glass-card rounded-2xl p-6 mb-8 animate__animated animate__fadeIn">
+                <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                    <i class="fas fa-info-circle text-yellow-400"></i> 存储信息
+                </h3>
+                <div id="storage-info" class="space-y-2">
+                    <!-- 存储信息将通过JS动态生成 -->
+                </div>
+            </div>
+            
+            <div class="text-center animate__animated animate__fadeIn">
+                <button onclick="backToHome()" class="px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-bold hover:opacity-90 transition-all">
+                    返回首页 <i class="fas fa-home ml-2"></i>
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- ========== 右下角点赞提示 (新增加) ========== -->
@@ -266,11 +325,26 @@
     </div>
 
     <!-- 引入外部库 -->
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" defer></script>
     
     <!-- 引入核心逻辑 -->
-    <script src="script.js"></script>
+    <script type="module" src="js/main.js" defer></script>
+    
+    <!-- 注册Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('Service Worker 注册成功:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('Service Worker 注册失败:', error);
+                    });
+            });
+        }
+    </script>
 </body>
 </html>
