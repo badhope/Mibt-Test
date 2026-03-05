@@ -1,0 +1,33 @@
+{
+  "name": "mbti-test",
+  "version": "2.0.0",
+  "description": "人格星球探索 - 专业MBTI心理测评系统",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo 'No build step required'",
+    "dev": "netlify dev",
+    "deploy": "netlify deploy --prod",
+    "functions:serve": "netlify functions:serve"
+  },
+  "keywords": [
+    "mbti",
+    "personality-test",
+    "psychology",
+    "career-test"
+  ],
+  "author": "BadHope",
+  "license": "MIT",
+  "dependencies": {
+    "@netlify/functions": "^2.0.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "uuid": "^9.0.0",
+    "validator": "^13.11.0"
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

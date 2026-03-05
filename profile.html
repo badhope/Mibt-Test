@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>个人中心 | 人格星球探索</title>
+    
+    <meta name="description" content="管理你的账户、查看测试历史、个性化设置">
+    
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="apple-touch-icon" href="favicon.svg">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="min-h-screen">
+    <div class="animated-bg"></div>
+    <div id="particles-js"></div>
+    
+    <div id="app" class="relative z-10 container mx-auto px-4 py-8">
+        <!-- 顶部导航 -->
+        <nav class="flex justify-between items-center mb-8">
+            <a href="index.html" class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
+                <i class="fas fa-arrow-left"></i>
+                <span>返回首页</span>
+            </a>
+            <button id="logout-btn" class="px-4 py-2 glass-card rounded-xl hover:bg-white/10 transition-all flex items-center gap-2">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>退出登录</span>
+            </button>
+        </nav>
+        
+        <!-- 用户信息卡片 -->
+        <div class="glass-card rounded-3xl p-8 mb-8 animate__animated animate__fadeInUp">
+            <div class="flex flex-col md:flex-row items-center gap-6">
+                <div class="relative">
+                    <img id="user-avatar" src="" alt="avatar" class="w-24 h-24 rounded-full border-4 border-purple-500/50">
+                    <button id="change-avatar-btn" class="absolute bottom-0 right-0 w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white hover:bg-purple-600 transition-colors">
+                        <i class="fas fa-camera text-sm"></i>
+                    </button>
+                </div>
+                <div class="text-center md:text-left flex-1">
+                    <h1 id="user-name" class="text-3xl font-bold mb-2"></h1>
+                    <p id="user-email" class="text-gray-400 mb-3"></p>
+                    <div class="flex flex-wrap justify-center md:justify-start gap-4 text-sm">
+                        <span class="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full">
+                            <i class="fas fa-calendar mr-1"></i>
+                            <span id="user-joined"></span> 加入
+                        </span>
+                        <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full">
+                            <i class="fas fa-check-circle mr-1"></i>
+                            <span id="user-tests"></span> 次测试
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 标签页导航 -->
+        <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
+            <button class="tab-btn active px-6 py-3 glass-card rounded-xl whitespace-nowrap" data-tab="history">
+                <i class="fas fa-history mr-2"></i>测试历史
+            </button>
+            <button class="tab-btn px-6 py-3 glass-card rounded-xl whitespace-nowrap" data-tab="settings">
+                <i class="fas fa-cog mr-2"></i>个人设置
+            </button>
+            <button class="tab-btn px-6 py-3 glass-card rounded-xl whitespace-nowrap" data-tab="background">
+                <i class="fas fa-image mr-2"></i>背景设置
+            </button>
+            <button class="tab-btn px-6 py-3 glass-card rounded-xl whitespace-nowrap" data-tab="export">
+                <i class="fas fa-download mr-2"></i>数据导出
+            </button>
+        </div>
+        
+        <!-- 内容区域 -->
+        <div id="tab-content">
+            <!-- 测试历史 -->
+            <div id="history-tab" class="tab-panel active">
+                <div class="glass-card rounded-2xl p-6">
+                    <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+                        <i class="fas fa-history text-purple-400"></i>
+                        测试历史记录
+                    </h2>
+                    <div id="history-list" class="space-y-4">
+                        <div class="text-center py-8 text-gray-400">
+                            <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
+                            <p>加载中...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 个人设置 -->
+            <div id="settings-tab" class="tab-panel hidden">
+                <div class="glass-card rounded-2xl p-6">
+                    <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+                        <i class="fas fa-cog text-purple-400"></i>
+                        个人设置
+                    </h2>
+                    <div class="space-y-6">
+                        <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+                            <div>
+                                <h4 class="font-bold">深色模式</h4>
+                                <p class="text-sm text-gray-400">使用深色主题</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="dark-mode-toggle" class="sr-only peer" checked>
+                                <div class="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
+                            </label>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+                            <div>
+                                <h4 class="font-bold">动画效果</h4>
+                                <p class="text-sm text-gray-400">启用页面动画</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="animations-toggle" class="sr-only peer" checked>
+                                <div class="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
+                            </label>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+                            <div>
+                                <h4 class="font-bold">邮件通知</h4>
+                                <p class="text-sm text-gray-400">接收测试提醒和更新</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="notifications-toggle" class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
+                            </label>
+                        </div>
+                        
+                        <div class="pt-4 border-t border-white/10">
+                            <h4 class="font-bold mb-4">修改密码</h4>
+                            <div class="space-y-4">
+                                <input type="password" id="current-password" placeholder="当前密码" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:border-purple-500 focus:outline-none transition-all">
+                                <input type="password" id="new-password" placeholder="新密码" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:border-purple-500 focus:outline-none transition-all">
+                                <input type="password" id="confirm-new-password" placeholder="确认新密码" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:border-purple-500 focus:outline-none transition-all">
+                                <button id="change-password-btn" class="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl text-white font-medium hover:opacity-90 transition-all">
+                                    修改密码
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 背景设置 -->
+            <div id="background-tab" class="tab-panel hidden">
+                <div class="glass-card rounded-2xl p-6">
+                    <div id="background-manager"></div>
+                </div>
+            </div>
+            
+            <!-- 数据导出 -->
+            <div id="export-tab" class="tab-panel hidden">
+                <div class="glass-card rounded-2xl p-6">
+                    <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+                        <i class="fas fa-download text-purple-400"></i>
+                        数据导出
+                    </h2>
+                    <div class="space-y-4">
+                        <button id="export-all-btn" class="w-full p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-all flex items-center gap-4">
+                            <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center text-2xl">
+                                📦
+                            </div>
+                            <div class="text-left">
+                                <div class="font-bold">导出所有数据</div>
+                                <div class="text-sm text-gray-400">包含测试历史、设置等所有数据</div>
+                            </div>
+                        </button>
+                        
+                        <button id="export-history-btn" class="w-full p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-all flex items-center gap-4">
+                            <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center text-2xl">
+                                📊
+                            </div>
+                            <div class="text-left">
+                                <div class="font-bold">导出测试历史</div>
+                                <div class="text-sm text-gray-400">仅导出测试结果和统计数据</div>
+                            </div>
+                        </button>
+                        
+                        <button id="export-settings-btn" class="w-full p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-all flex items-center gap-4">
+                            <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center text-2xl">
+                                ⚙️
+                            </div>
+                            <div class="text-left">
+                                <div class="font-bold">导出设置</div>
+                                <div class="text-sm text-gray-400">仅导出个人设置和偏好</div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="toast" id="toast"></div>
+    
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js" defer></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/background.js"></script>
+    <script src="js/export.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!window.authService?.requireAuth()) return;
+            
+            await initProfilePage();
+        });
+        
+        async function initProfilePage() {
+            const user = window.authService.getCurrentUser();
+            if (!user) {
+                window.location.href = 'auth.html';
+                return;
+            }
+            
+            document.getElementById('user-avatar').src = user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.id}`;
+            document.getElementById('user-name').textContent = user.username || '探索者';
+            document.getElementById('user-email').textContent = user.email;
+            document.getElementById('user-joined').textContent = new Date(user.createdAt).toLocaleDateString();
+            document.getElementById('user-tests').textContent = user.stats?.testsCompleted || 0;
+            
+            initTabs();
+            initSettings(user);
+            await loadTestHistory();
+            initBackgroundManager();
+            initExportButtons();
+            initLogout();
+            initParticles();
+        }
+        
+        function initTabs() {
+            const tabs = document.querySelectorAll('.tab-btn');
+            const panels = document.querySelectorAll('.tab-panel');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const targetTab = tab.dataset.tab;
+                    
+                    tabs.forEach(t => t.classList.remove('active', 'bg-purple-500/20'));
+                    panels.forEach(p => p.classList.add('hidden'));
+                    
+                    tab.classList.add('active', 'bg-purple-500/20');
+                    document.getElementById(`${targetTab}-tab`).classList.remove('hidden');
+                });
+            });
+        }
+        
+        function initSettings(user) {
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            const animationsToggle = document.getElementById('animations-toggle');
+            
+            if (user.settings) {
+                darkModeToggle.checked = user.settings.darkMode ?? true;
+                animationsToggle.checked = user.settings.animations ?? true;
+            }
+            
+            darkModeToggle.addEventListener('change', () => saveSettings());
+            animationsToggle.addEventListener('change', () => saveSettings());
+            
+            document.getElementById('change-password-btn').addEventListener('click', changePassword);
+        }
+        
+        async function saveSettings() {
+            const settings = {
+                darkMode: document.getElementById('dark-mode-toggle').checked,
+                animations: document.getElementById('animations-toggle').checked
+            };
+            
+            try {
+                await window.authService.updateProfile({ settings });
+                showToast('设置已保存', 'success');
+            } catch (error) {
+                showToast('保存失败', 'error');
+            }
+        }
+        
+        async function changePassword() {
+            const currentPassword = document.getElementById('current-password').value;
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-new-password').value;
+            
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                showToast('请填写所有字段', 'error');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                showToast('两次密码输入不一致', 'error');
+                return;
+            }
+            
+            if (newPassword.length < 8) {
+                showToast('密码至少需要8个字符', 'error');
+                return;
+            }
+            
+            showToast('密码修改功能开发中...', 'success');
+        }
+        
+        async function loadTestHistory() {
+            const container = document.getElementById('history-list');
+            
+            try {
+                const localHistory = JSON.parse(localStorage.getItem('personality_test_history') || '[]');
+                
+                if (localHistory.length === 0) {
+                    container.innerHTML = `
+                        <div class="text-center py-8 text-gray-400">
+                            <div class="text-4xl mb-3">📋</div>
+                            <p>暂无测试历史</p>
+                            <a href="index.html" class="inline-block mt-4 px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg text-white font-medium hover:opacity-90 transition-all">
+                                开始测试
+                            </a>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = localHistory.map(entry => {
+                    const date = new Date(entry.timestamp);
+                    return `
+                        <div class="p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-all">
+                            <div class="flex justify-between items-center mb-3">
+                                <h4 class="font-bold">${entry.mode === 'quick' ? '⚡ 闪电模式' : entry.mode === 'standard' ? '🚀 标准模式' : '🧠 专家模式'}</h4>
+                                <span class="text-sm text-gray-400">${date.toLocaleString()}</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-3">
+                                ${entry.topDimensions.map(dim => `
+                                    <div class="text-center p-3 bg-white/5 rounded-lg">
+                                        <div class="text-2xl mb-1">${dim.icon}</div>
+                                        <div class="text-xs font-bold">${dim.name}</div>
+                                        <div class="text-sm text-purple-400">${dim.score}%</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="flex justify-end gap-2 mt-3">
+                                <button class="view-result-btn px-4 py-1 text-sm bg-purple-500/20 text-purple-400 rounded-lg hover:bg-purple-500/30 transition-all" data-id="${entry.id}">
+                                    查看详情
+                                </button>
+                                <button class="export-result-btn px-4 py-1 text-sm bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500/30 transition-all" data-id="${entry.id}">
+                                    导出
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+            } catch (error) {
+                container.innerHTML = `
+                    <div class="text-center py-8 text-red-400">
+                        <i class="fas fa-exclamation-triangle text-2xl mb-2"></i>
+                        <p>加载失败</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function initBackgroundManager() {
+            const container = document.getElementById('background-manager');
+            new window.BackgroundManager({
+                container,
+                onSelect: (bg) => {
+                    if (bg && bg.url) {
+                        document.querySelector('.animated-bg').style.background = `url('${bg.url}') center/cover`;
+                    } else {
+                        document.querySelector('.animated-bg').style.background = '';
+                    }
+                }
+            });
+        }
+        
+        function initExportButtons() {
+            document.getElementById('export-all-btn').addEventListener('click', async () => {
+                const exportManager = new window.ExportManager({});
+                await exportManager.exportJSON();
+            });
+            
+            document.getElementById('export-history-btn').addEventListener('click', async () => {
+                const history = JSON.parse(localStorage.getItem('personality_test_history') || '[]');
+                const dataStr = JSON.stringify(history, null, 2);
+                const blob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `test-history-${new Date().toISOString().slice(0, 10)}.json`;
+                link.click();
+                
+                URL.revokeObjectURL(url);
+                showToast('导出成功', 'success');
+            });
+            
+            document.getElementById('export-settings-btn').addEventListener('click', async () => {
+                const settings = JSON.parse(localStorage.getItem('personality_test_settings') || '{}');
+                const dataStr = JSON.stringify(settings, null, 2);
+                const blob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `settings-${new Date().toISOString().slice(0, 10)}.json`;
+                link.click();
+                
+                URL.revokeObjectURL(url);
+                showToast('导出成功', 'success');
+            });
+        }
+        
+        function initLogout() {
+            document.getElementById('logout-btn').addEventListener('click', async () => {
+                if (confirm('确定要退出登录吗？')) {
+                    await window.authService.logout();
+                    showToast('已退出登录', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1000);
+                }
+            });
+        }
+        
+        function initParticles() {
+            if (typeof particlesJS !== 'undefined') {
+                particlesJS('particles-js', {
+                    particles: {
+                        number: { value: 20, density: { enable: true, value_area: 800 } },
+                        color: { value: ['#8b5cf6', '#ec4899', '#00f0ff'] },
+                        shape: { type: 'circle' },
+                        opacity: { value: 0.3, random: true },
+                        size: { value: 3, random: true },
+                        line_linked: { enable: true, distance: 150, color: '#8b5cf6', opacity: 0.1, width: 1 },
+                        move: { enable: true, speed: 0.5, direction: 'none', random: true, out_mode: 'out' }
+                    },
+                    interactivity: {
+                        detect_on: 'canvas',
+                        events: { onhover: { enable: true, mode: 'grab' }, onclick: { enable: true, mode: 'push' } },
+                        modes: { grab: { distance: 120, line_linked: { opacity: 0.3 } }, push: { particles_nb: 2 } }
+                    },
+                    retina_detect: true
+                });
+            }
+        }
+        
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

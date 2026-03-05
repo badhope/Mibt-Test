@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>用户认证 | 人格星球探索</title>
+    
+    <meta name="description" content="登录或注册人格星球探索，开启你的心理测评之旅">
+    <meta name="keywords" content="人格测试,心理测试,MBTI,用户登录,注册">
+    
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="apple-touch-icon" href="favicon.svg">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+        
+        .auth-card {
+            width: 100%;
+            max-width: 440px;
+            position: relative;
+        }
+        
+        .auth-tabs {
+            display: flex;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 2rem;
+        }
+        
+        .auth-tab {
+            flex: 1;
+            padding: 12px 24px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: #9ca3af;
+        }
+        
+        .auth-tab.active {
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            color: white;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+        
+        .auth-form {
+            display: none;
+        }
+        
+        .auth-form.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #e5e7eb;
+            font-size: 0.875rem;
+        }
+        
+        .form-input-wrapper {
+            position: relative;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 14px 16px 14px 48px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            background: rgba(139, 92, 246, 0.1);
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+        }
+        
+        .form-input.error {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+        
+        .form-input.success {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+        
+        .form-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            transition: color 0.3s ease;
+        }
+        
+        .form-input:focus + .form-icon {
+            color: #8b5cf6;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .password-toggle:hover {
+            color: #8b5cf6;
+        }
+        
+        .form-error {
+            color: #ef4444;
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        
+        .form-error.show {
+            display: block;
+            animation: shake 0.3s ease;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        .form-hint {
+            color: #9ca3af;
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+        }
+        
+        .password-strength {
+            display: flex;
+            gap: 4px;
+            margin-top: 0.5rem;
+        }
+        
+        .strength-bar {
+            flex: 1;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+        
+        .strength-bar.weak { background: #ef4444; }
+        .strength-bar.medium { background: #f59e0b; }
+        .strength-bar.strong { background: #10b981; }
+        
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+        
+        .checkbox-custom {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .checkbox-wrapper input:checked + .checkbox-custom {
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            border-color: transparent;
+        }
+        
+        .checkbox-custom i {
+            color: white;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .checkbox-wrapper input:checked + .checkbox-custom i {
+            opacity: 1;
+        }
+        
+        .auth-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        }
+        
+        .auth-btn:active {
+            transform: translateY(0);
+        }
+        
+        .auth-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .auth-btn .spinner {
+            display: none;
+        }
+        
+        .auth-btn.loading .btn-text {
+            visibility: hidden;
+        }
+        
+        .auth-btn.loading .spinner {
+            display: block;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .divider span {
+            padding: 0 1rem;
+        }
+        
+        .social-login {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .social-btn {
+            flex: 1;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .social-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .social-btn.github:hover {
+            border-color: #333;
+            background: rgba(51, 51, 51, 0.2);
+        }
+        
+        .social-btn.google:hover {
+            border-color: #ea4335;
+            background: rgba(234, 67, 53, 0.1);
+        }
+        
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 1.5rem;
+        }
+        
+        .forgot-password a {
+            color: #8b5cf6;
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.3s ease;
+        }
+        
+        .forgot-password a:hover {
+            color: #a78bfa;
+        }
+        
+        .back-home {
+            position: absolute;
+            top: -60px;
+            left: 0;
+            color: #9ca3af;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.3s ease;
+        }
+        
+        .back-home:hover {
+            color: white;
+        }
+        
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+            display: none;
+        }
+        
+        .toast.show {
+            display: block;
+        }
+        
+        .toast.success {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+        
+        .toast.error {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .terms-link {
+            color: #8b5cf6;
+            text-decoration: none;
+        }
+        
+        .terms-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+    <div class="animated-bg"></div>
+    <div id="particles-js"></div>
+    
+    <div class="auth-container">
+        <div class="auth-card glass-card rounded-3xl p-8 animate__animated animate__fadeInUp">
+            <a href="index.html" class="back-home">
+                <i class="fas fa-arrow-left"></i>
+                返回首页
+            </a>
+            
+            <div class="text-center mb-8">
+                <div class="text-5xl mb-4">🚀</div>
+                <h1 class="text-2xl font-bold mb-2">欢迎来到人格星球</h1>
+                <p class="text-gray-400 text-sm">登录或注册，开启探索之旅</p>
+            </div>
+            
+            <div class="auth-tabs">
+                <div class="auth-tab active" data-tab="login">登录</div>
+                <div class="auth-tab" data-tab="register">注册</div>
+            </div>
+            
+            <!-- 登录表单 -->
+            <form id="login-form" class="auth-form active">
+                <div class="form-group">
+                    <label class="form-label">邮箱或用户名</label>
+                    <div class="form-input-wrapper">
+                        <input type="text" class="form-input" id="login-identifier" placeholder="请输入邮箱或用户名" autocomplete="username">
+                        <i class="fas fa-user form-icon"></i>
+                    </div>
+                    <div class="form-error" id="login-identifier-error">请输入邮箱或用户名</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">密码</label>
+                    <div class="form-input-wrapper">
+                        <input type="password" class="form-input" id="login-password" placeholder="请输入密码" autocomplete="current-password">
+                        <i class="fas fa-lock form-icon"></i>
+                        <i class="fas fa-eye password-toggle" data-target="login-password"></i>
+                    </div>
+                    <div class="form-error" id="login-password-error">请输入密码</div>
+                </div>
+                
+                <div class="forgot-password">
+                    <a href="#" id="forgot-password-link">忘记密码？</a>
+                </div>
+                
+                <button type="submit" class="auth-btn">
+                    <span class="btn-text">登录</span>
+                    <div class="spinner"></div>
+                </button>
+                
+                <div class="divider">
+                    <span>或使用以下方式登录</span>
+                </div>
+                
+                <div class="social-login">
+                    <button type="button" class="social-btn github" title="GitHub登录">
+                        <i class="fab fa-github"></i>
+                    </button>
+                    <button type="button" class="social-btn google" title="Google登录">
+                        <i class="fab fa-google"></i>
+                    </button>
+                </div>
+            </form>
+            
+            <!-- 注册表单 -->
+            <form id="register-form" class="auth-form">
+                <div class="form-group">
+                    <label class="form-label">用户名</label>
+                    <div class="form-input-wrapper">
+                        <input type="text" class="form-input" id="register-username" placeholder="3-20个字符，字母数字下划线" autocomplete="username">
+                        <i class="fas fa-user form-icon"></i>
+                    </div>
+                    <div class="form-error" id="register-username-error">用户名格式不正确</div>
+                    <div class="form-hint">用于登录和展示，注册后不可更改</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">邮箱地址</label>
+                    <div class="form-input-wrapper">
+                        <input type="email" class="form-input" id="register-email" placeholder="请输入邮箱地址" autocomplete="email">
+                        <i class="fas fa-envelope form-icon"></i>
+                    </div>
+                    <div class="form-error" id="register-email-error">请输入有效的邮箱地址</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">密码</label>
+                    <div class="form-input-wrapper">
+                        <input type="password" class="form-input" id="register-password" placeholder="8-32个字符，包含大小写字母和数字" autocomplete="new-password">
+                        <i class="fas fa-lock form-icon"></i>
+                        <i class="fas fa-eye password-toggle" data-target="register-password"></i>
+                    </div>
+                    <div class="password-strength" id="password-strength">
+                        <div class="strength-bar"></div>
+                        <div class="strength-bar"></div>
+                        <div class="strength-bar"></div>
+                        <div class="strength-bar"></div>
+                    </div>
+                    <div class="form-error" id="register-password-error">密码强度不足</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">确认密码</label>
+                    <div class="form-input-wrapper">
+                        <input type="password" class="form-input" id="register-confirm-password" placeholder="请再次输入密码" autocomplete="new-password">
+                        <i class="fas fa-lock form-icon"></i>
+                        <i class="fas fa-eye password-toggle" data-target="register-confirm-password"></i>
+                    </div>
+                    <div class="form-error" id="register-confirm-password-error">两次密码输入不一致</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="checkbox-wrapper">
+                        <input type="checkbox" id="agree-terms" class="hidden">
+                        <div class="checkbox-custom">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <span class="text-sm text-gray-300">
+                            我已阅读并同意 <a href="#" class="terms-link">服务条款</a> 和 <a href="#" class="terms-link">隐私政策</a>
+                        </span>
+                    </label>
+                    <div class="form-error" id="agree-terms-error">请先同意服务条款</div>
+                </div>
+                
+                <button type="submit" class="auth-btn">
+                    <span class="btn-text">创建账号</span>
+                    <div class="spinner"></div>
+                </button>
+                
+                <div class="divider">
+                    <span>或使用以下方式注册</span>
+                </div>
+                
+                <div class="social-login">
+                    <button type="button" class="social-btn github" title="GitHub注册">
+                        <i class="fab fa-github"></i>
+                    </button>
+                    <button type="button" class="social-btn google" title="Google注册">
+                        <i class="fab fa-google"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="toast" id="toast"></div>
+    
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js" defer></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initAuthPage();
+        });
+    </script>
+</body>
+</html>

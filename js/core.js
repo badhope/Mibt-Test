@@ -8,6 +8,7 @@ let dimensionScores = {};
 let miniTestUserAnswers = {};
 let currentMiniTestType = null;
 let currentMiniQuestionIndex = 0;
+let testSubmitted = false;
 
 function init() {
     console.log('Core init function started');
@@ -34,6 +35,9 @@ function init() {
     window.handleImport = handleImport;
     window.clearAllUserData = clearAllUserData;
     window.clearAllData = clearAllData;
+    window.toggleQuestionNav = toggleQuestionNav;
+    window.jumpToQuestion = jumpToQuestion;
+    window.submitTest = submitTest;
     
     // 测试函数暴露
     console.log('Core functions initialized:', {
@@ -74,10 +78,13 @@ function startTest(mode) {
         currentQuestionIndex = 0;
         userAnswers = {};
         dimensionScores = {};
+        testSubmitted = false;
         clearProgress();
         
         showTestPage();
         renderQuestion();
+        updateQuestionNav();
+        updateAnswerProgress();
         
         // 优化动画性能
         const questionContainer = document.getElementById('question-container');
@@ -182,10 +189,29 @@ function renderQuestion() {
     DOM.optionsContainer.innerHTML = optionsHTML;
     
     DOM.prevBtn.disabled = currentQuestionIndex === 0;
-    DOM.nextBtn.disabled = userAnswers[currentQuestionIndex] === undefined;
+    
+    // 更新下一题/提交按钮状态
+    const submitBtn = document.getElementById('submit-test-btn');
+    const answeredCount = Object.keys(userAnswers).length;
+    const allAnswered = answeredCount === total;
+    
+    if (currentQuestionIndex === total - 1 && allAnswered) {
+        DOM.nextBtn.classList.add('hidden');
+        submitBtn.classList.remove('hidden');
+        submitBtn.disabled = !allAnswered;
+    } else {
+        DOM.nextBtn.classList.remove('hidden');
+        submitBtn.classList.add('hidden');
+        DOM.nextBtn.disabled = userAnswers[currentQuestionIndex] === undefined;
+    }
+    
     DOM.nextBtn.innerHTML = currentQuestionIndex === total - 1 
         ? '查看结果 <i class="fas fa-chart-pie ml-2"></i>'
         : '下一题 <i class="fas fa-arrow-right ml-2"></i>';
+    
+    // 更新答题进度
+    updateAnswerProgress();
+    updateQuestionNav();
 }
 
 function selectOption(idx) {
@@ -210,11 +236,9 @@ function selectOption(idx) {
 function nextQuestion() {
     if (userAnswers[currentQuestionIndex] === undefined) return;
     
-    const q = questions[currentTestMode][currentQuestionIndex];
-    if (!dimensionScores[q.dimension]) dimensionScores[q.dimension] = 0;
-    dimensionScores[q.dimension] += q.options[userAnswers[currentQuestionIndex]].score;
+    const total = questions[currentTestMode].length;
     
-    if (currentQuestionIndex < questions[currentTestMode].length - 1) {
+    if (currentQuestionIndex < total - 1) {
         currentQuestionIndex++;
         saveProgress({
             mode: currentTestMode,
@@ -240,18 +264,11 @@ function nextQuestion() {
         } else {
             renderQuestion();
         }
-    } else {
-        finishTest();
     }
 }
 
 function prevQuestion() {
     if (currentQuestionIndex > 0) {
-        const q = questions[currentTestMode][currentQuestionIndex];
-        if (userAnswers[currentQuestionIndex] !== undefined) {
-            dimensionScores[q.dimension] -= q.options[userAnswers[currentQuestionIndex]].score;
-        }
-        
         currentQuestionIndex--;
         saveProgress({
             mode: currentTestMode,
@@ -280,6 +297,122 @@ function prevQuestion() {
     }
 }
 
+function toggleQuestionNav() {
+    const panel = document.getElementById('question-nav-panel');
+    if (panel) {
+        panel.classList.toggle('hidden');
+        if (!panel.classList.contains('hidden')) {
+            updateQuestionNav();
+        }
+    }
+}
+
+function updateQuestionNav() {
+    const grid = document.getElementById('question-nav-grid');
+    if (!grid) return;
+    
+    const total = questions[currentTestMode].length;
+    
+    grid.innerHTML = Array.from({ length: total }, (_, i) => {
+        const isAnswered = userAnswers[i] !== undefined;
+        const isCurrent = i === currentQuestionIndex;
+        
+        let bgClass = 'bg-gray-600/50 hover:bg-gray-500/50';
+        if (isCurrent) {
+            bgClass = 'bg-purple-500/50 ring-2 ring-purple-400';
+        } else if (isAnswered) {
+            bgClass = 'bg-green-500/50';
+        }
+        
+        return `
+            <button onclick="jumpToQuestion(${i})" 
+                class="w-8 h-8 rounded-lg text-xs font-bold transition-all ${bgClass} ${isCurrent ? 'animate-pulse' : ''}"
+                title="第${i + 1}题 ${isAnswered ? '(已答)' : '(未答)'}">
+                ${i + 1}
+            </button>
+        `;
+    }).join('');
+}
+
+function jumpToQuestion(index) {
+    if (index < 0 || index >= questions[currentTestMode].length) return;
+    
+    currentQuestionIndex = index;
+    saveProgress({
+        mode: currentTestMode,
+        index: currentQuestionIndex,
+        answers: userAnswers,
+        scores: dimensionScores
+    });
+    
+    const questionContainer = document.getElementById('question-container');
+    if (questionContainer) {
+        questionContainer.style.opacity = '0';
+        questionContainer.style.transition = 'opacity 0.3s ease-out';
+        
+        requestAnimationFrame(() => {
+            renderQuestion();
+            requestAnimationFrame(() => {
+                questionContainer.style.opacity = '1';
+            });
+        });
+    } else {
+        renderQuestion();
+    }
+}
+
+function updateAnswerProgress() {
+    const total = questions[currentTestMode].length;
+    const answeredCount = Object.keys(userAnswers).length;
+    const unansweredCount = total - answeredCount;
+    
+    const answeredEl = document.getElementById('answered-count');
+    const unansweredEl = document.getElementById('unanswered-count');
+    const totalEl = document.getElementById('total-count');
+    
+    if (answeredEl) answeredEl.textContent = answeredCount;
+    if (unansweredEl) unansweredEl.textContent = unansweredCount;
+    if (totalEl) totalEl.textContent = total;
+}
+
+function submitTest() {
+    const total = questions[currentTestMode].length;
+    const answeredCount = Object.keys(userAnswers).length;
+    
+    if (answeredCount < total) {
+        const unansweredList = [];
+        for (let i = 0; i < total; i++) {
+            if (userAnswers[i] === undefined) {
+                unansweredList.push(i + 1);
+            }
+        }
+        
+        const toast = document.createElement('div');
+        toast.className = 'fixed top-4 right-4 bg-red-500/90 text-white px-6 py-3 rounded-xl shadow-lg z-50 animate__animated animate__fadeInRight';
+        toast.innerHTML = `<i class="fas fa-exclamation-circle mr-2"></i> 还有 ${total - answeredCount} 题未答：第 ${unansweredList.slice(0, 5).join(', ')}${unansweredList.length > 5 ? '...' : ''} 题`;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.classList.remove('animate__fadeInRight');
+            toast.classList.add('animate__fadeOutRight');
+            setTimeout(() => toast.remove(), 500);
+        }, 3000);
+        return;
+    }
+    
+    testSubmitted = true;
+    
+    // 计算所有维度分数
+    questions[currentTestMode].forEach((q, index) => {
+        if (!dimensionScores[q.dimension]) dimensionScores[q.dimension] = 0;
+        if (userAnswers[index] !== undefined) {
+            dimensionScores[q.dimension] += q.options[userAnswers[index]].score;
+        }
+    });
+    
+    finishTest();
+}
+
 function handleResumeTest() {
     const progress = loadProgress();
     if (progress) {
@@ -287,9 +420,12 @@ function handleResumeTest() {
         currentQuestionIndex = progress.index;
         userAnswers = progress.answers;
         dimensionScores = progress.scores || {};
+        testSubmitted = false;
         
         showTestPage();
         renderQuestion();
+        updateQuestionNav();
+        updateAnswerProgress();
     }
 }
 
@@ -450,12 +586,73 @@ function showResults() {
                 <button onclick="shareResults()" class="px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl font-bold hover:opacity-90 transition-all">
                     分享结果 <i class="fas fa-share-alt ml-2"></i>
                 </button>
+                <button onclick="showExportDialog()" class="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl font-bold hover:opacity-90 transition-all">
+                    导出报告 <i class="fas fa-download ml-2"></i>
+                </button>
                 <button onclick="backToHome()" class="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-bold hover:opacity-90 transition-all">
                     返回首页 <i class="fas fa-home ml-2"></i>
                 </button>
             </div>
         </div>
+        
+        <div id="comments-section" class="mt-8 animate__animated animate__fadeIn"></div>
     `;
+    
+    setTimeout(() => {
+        initCommentsSection();
+    }, 500);
+}
+
+function initCommentsSection() {
+    const container = document.getElementById('comments-section');
+    if (container && window.CommentsManager) {
+        new window.CommentsManager({
+            testId: `test-${currentTestMode}-${Date.now()}`,
+            container
+        });
+    }
+}
+
+function showExportDialog() {
+    if (!window.authService?.isAuthenticated()) {
+        window.permissionService?.showAuthRequired('导出功能需要登录');
+        return;
+    }
+    
+    const exportManager = new window.ExportManager({
+        testId: `test-${currentTestMode}-${Date.now()}`,
+        testData: {
+            mode: currentTestMode,
+            scores: dimensionScores,
+            topDimensions: Object.entries(dimensionScores)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 3)
+                .map(([dim, score]) => {
+                    const dimensionInfo = dimensions[currentTestMode].find(d => d.id === dim);
+                    return {
+                        id: dim,
+                        name: dimensionInfo.name,
+                        score: score,
+                        icon: dimensionInfo.icon
+                    };
+                })
+        }
+    });
+    
+    exportManager.showExportDialog();
+}
+
+function showCommentsFeature() {
+    const toast = document.createElement('div');
+    toast.className = 'fixed top-4 right-4 bg-purple-500/90 text-white px-6 py-3 rounded-xl shadow-lg z-50 animate__animated animate__fadeInRight';
+    toast.innerHTML = '<i class="fas fa-info-circle mr-2"></i> 完成测试后即可查看和发表评论！';
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.classList.remove('animate__fadeInRight');
+        toast.classList.add('animate__fadeOutRight');
+        setTimeout(() => toast.remove(), 500);
+    }, 3000);
 }
 
 function confirmSaveAndExit() {

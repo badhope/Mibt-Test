@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>留言板 | 人格星球探索</title>
+    
+    <meta name="description" content="与其他探索者交流互动，分享你的想法和故事">
+    
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="apple-touch-icon" href="favicon.svg">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="min-h-screen">
+    <div class="animated-bg"></div>
+    <div id="particles-js"></div>
+    
+    <div id="app" class="relative z-10 container mx-auto px-4 py-8 max-w-4xl">
+        <!-- 顶部导航 -->
+        <nav class="flex justify-between items-center mb-8">
+            <a href="index.html" class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
+                <i class="fas fa-arrow-left"></i>
+                <span>返回首页</span>
+            </a>
+            <div class="flex items-center gap-3">
+                <a href="profile.html" class="glass-card rounded-full px-4 py-2 hover:bg-white/10 transition-all flex items-center gap-2">
+                    <i class="fas fa-user"></i>
+                    <span class="hidden md:inline">个人中心</span>
+                </a>
+            </div>
+        </nav>
+        
+        <!-- 留言板内容 -->
+        <div id="message-board-container"></div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js" defer></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/messages.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            await window.authService?.init();
+            
+            const container = document.getElementById('message-board-container');
+            new window.MessageBoard({ container });
+            
+            initParticles();
+        });
+        
+        function initParticles() {
+            if (typeof particlesJS !== 'undefined') {
+                particlesJS('particles-js', {
+                    particles: {
+                        number: { value: 20, density: { enable: true, value_area: 800 } },
+                        color: { value: ['#8b5cf6', '#ec4899', '#00f0ff'] },
+                        shape: { type: 'circle' },
+                        opacity: { value: 0.3, random: true },
+                        size: { value: 3, random: true },
+                        line_linked: { enable: true, distance: 150, color: '#8b5cf6', opacity: 0.1, width: 1 },
+                        move: { enable: true, speed: 0.5, direction: 'none', random: true, out_mode: 'out' }
+                    },
+                    interactivity: {
+                        detect_on: 'canvas',
+                        events: { onhover: { enable: true, mode: 'grab' }, onclick: { enable: true, mode: 'push' } },
+                        modes: { grab: { distance: 120, line_linked: { opacity: 0.3 } }, push: { particles_nb: 2 } }
+                    },
+                    retina_detect: true
+                });
+            }
+        }
+    </script>
+</body>
+</html>

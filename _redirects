@@ -1,0 +1,10 @@
+# API重定向规则
+/api/auth/*              /.netlify/functions/auth-:splat           200
+/api/comments/*          /.netlify/functions/comments-:splat       200
+/api/messages/*          /.netlify/functions/messages-:splat       200
+/api/export/*            /.netlify/functions/export-:splat         200
+/api/backgrounds/*       /.netlify/functions/backgrounds-:splat    200
+/api/user/*              /.netlify/functions/user-:splat           200
+
+# SPA路由支持
+/*                       /index.html                               200
