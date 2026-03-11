@@ -1,21 +1,40 @@
 {
   "name": "mbti-test",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "人格星球探索 - 专业MBTI心理测评系统",
   "main": "index.html",
   "scripts": {
     "start": "npx http-server . -p 8080 -o",
-    "serve": "npx http-server . -p 8080"
+    "serve": "npx http-server . -p 8080",
+    "lint": "eslint js/**/*.js --fix",
+    "lint:check": "eslint js/**/*.js",
+    "test": "node tests/test-runner.js",
+    "test:watch": "node tests/test-runner.js --watch",
+    "clean": "node scripts/clean.js",
+    "validate": "npm run lint:check && npm run test"
   },
   "keywords": [
     "mbti",
     "personality-test",
     "psychology",
-    "career-test"
+    "career-test",
+    "personality-assessment"
   ],
   "author": "BadHope",
   "license": "MIT",
   "devDependencies": {
-    "http-server": "^14.1.1"
-  }
+    "http-server": "^14.1.1",
+    "eslint": "^8.56.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/badhope/Mbti-Test.git"
+  },
+  "bugs": {
+    "url": "https://github.com/badhope/Mbti-Test/issues"
+  },
+  "homepage": "https://github.com/badhope/Mbti-Test#readme"
 }

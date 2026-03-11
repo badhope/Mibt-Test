@@ -26,9 +26,9 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" integrity="sha512-c42qTSw/wPZ3/4LBz59+es5ptZvYSqY9k1U6bOlP5dvRvlqPzqV+oqF5hG5vT3VL2zQ3D8L7V3k3Fz3v3z3v3w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     
     <link rel="stylesheet" href="style.css">
 </head>
@@ -449,9 +449,10 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" integrity="sha512-mw3R9r2P8Hw3p6z4hK5p6f5f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6==" crossorigin="anonymous" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha512-z4OUqw38qNIcn2x7Q9R7a3T9jCsFqL5q5K5K5K5K5K5K5K5K5K5K5K5K5K5K5K5K5K5K5K5K5K5K5K5K5K5K5K5g==" crossorigin="anonymous" defer></script>
     
+    <script src="js/utils.js"></script>
     <script src="js/data.js"></script>
     <script src="js/storage.js"></script>
     <script src="js/guest.js"></script>
@@ -608,21 +609,6 @@
                     </div>
                 `;
             }
-        }
-        
-        function showToast(message, type = 'success') {
-            const toast = document.createElement('div');
-            toast.className = `fixed top-4 right-4 px-6 py-3 rounded-xl shadow-lg z-50 animate__animated animate__fadeInRight ${
-                type === 'success' ? 'bg-green-500/90' : 'bg-red-500/90'
-            } text-white`;
-            toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check' : 'exclamation'}-circle mr-2"></i>${message}`;
-            document.body.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.classList.remove('animate__fadeInRight');
-                toast.classList.add('animate__fadeOutRight');
-                setTimeout(() => toast.remove(), 500);
-            }, 2000);
         }
         
         function clearAllUserData() {

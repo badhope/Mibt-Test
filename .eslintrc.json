@@ -1,0 +1,61 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended"
+  ],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "script"
+  },
+  "globals": {
+    "particlesJS": "readonly",
+    "anime": "readonly",
+    "confetti": "readonly"
+  },
+  "rules": {
+    "indent": ["error", 4, { "SwitchCase": 1 }],
+    "linebreak-style": ["error", "unix"],
+    "quotes": ["error", "single", { "avoidEscape": true }],
+    "semi": ["error", "always"],
+    "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+    "no-console": "off",
+    "no-alert": "warn",
+    "eqeqeq": ["error", "always"],
+    "curly": ["error", "all"],
+    "no-var": "error",
+    "prefer-const": "warn",
+    "prefer-arrow-callback": "warn",
+    "no-duplicate-imports": "error",
+    "no-template-curly-in-string": "error",
+    "require-await": "warn",
+    "no-return-await": "error",
+    "prefer-promise-reject-errors": "error",
+    "no-throw-literal": "error",
+    "no-param-reassign": "warn",
+    "no-shadow": "warn",
+    "no-use-before-define": ["error", { "functions": false }],
+    "camelcase": ["warn", { "properties": "never" }],
+    "max-len": ["warn", { "code": 120, "ignoreStrings": true, "ignoreTemplateLiterals": true }],
+    "max-depth": ["warn", 4],
+    "max-lines-per-function": ["warn", { "max": 100, "skipBlankLines": true, "skipComments": true }],
+    "complexity": ["warn", 15],
+    "no-nested-ternary": "warn",
+    "spaced-comment": ["error", "always"],
+    "keyword-spacing": ["error", { "before": true, "after": true }],
+    "space-before-blocks": "error",
+    "space-infix-ops": "error",
+    "comma-spacing": ["error", { "before": false, "after": true }],
+    "key-spacing": ["error", { "beforeColon": false, "afterColon": true }],
+    "object-curly-spacing": ["error", "always"],
+    "array-bracket-spacing": ["error", "never"],
+    "arrow-spacing": "error",
+    "no-multiple-empty-lines": ["error", { "max": 2, "maxEOF": 1 }],
+    "no-trailing-spaces": "error",
+    "eol-last": ["error", "always"],
+    "brace-style": ["error", "1tbs", { "allowSingleLine": false }]
+  }
+}
