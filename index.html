@@ -2,9 +2,17 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <title>人格星球探索 | 深度心理测评与职业倾向分析</title>
+    
+    <meta name="color-scheme" content="dark light">
+    <meta name="theme-color" content="#0a0a0f" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)">
     
     <meta name="description" content="人格星球探索是一个专业且有趣的人格测试网站。提供闪电模式(5分钟)、标准模式(15分钟)和专家模式(30分钟)三种深度测评，帮助你了解性格、职业倾向和潜能。">
     <meta name="keywords" content="人格测试,心理测试,MBTI,性格分析,职业测试,人格星球,心理测评,自我探索">
@@ -20,7 +28,16 @@
     <link rel="apple-touch-icon" href="favicon.svg">
     
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0a0a0f">
+    
+    <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    
+    <link rel="preload" href="js/utils.js" as="script">
+    <link rel="preload" href="js/data.js" as="script">
+    <link rel="preload" href="js/storage.js" as="script">
     
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -34,16 +51,23 @@
 </head>
 
 <body class="min-h-screen">
-    <div class="animated-bg"></div>
+    <a href="#main-content" class="skip-link">跳转到主要内容</a>
     
-    <div id="particles-js"></div>
+    <div id="network-indicator" class="network-indicator hidden" role="status" aria-live="polite">
+        <i class="fas fa-wifi" aria-hidden="true"></i>
+        <span id="network-status-text">网络状态</span>
+    </div>
     
-    <div class="floating-decoration" style="top: 10%; left: 5%;">🧠</div>
-    <div class="floating-decoration" style="top: 30%; right: 10%; animation-delay: -2s;">✨</div>
-    <div class="floating-decoration" style="top: 60%; left: 15%; animation-delay: -4s;">🎭</div>
-    <div class="floating-decoration" style="top: 80%; right: 5%; animation-delay: -6s;">🌟</div>
+    <div class="animated-bg" aria-hidden="true"></div>
     
-    <div id="guest-status-bar" class="fixed top-4 right-4 z-50 flex items-center gap-3">
+    <div id="particles-js" aria-hidden="true"></div> 
+    
+    <div class="floating-decoration" style="top: 10%; left: 5%;" aria-hidden="true">🧠</div>
+    <div class="floating-decoration" style="top: 30%; right: 10%; animation-delay: -2s;" aria-hidden="true">✨</div>
+    <div class="floating-decoration" style="top: 60%; left: 15%; animation-delay: -4s;" aria-hidden="true">🎭</div>
+    <div class="floating-decoration" style="top: 80%; right: 5%; animation-delay: -6s;" aria-hidden="true">🌟</div> 
+    
+    <header id="guest-status-bar" class="fixed top-4 right-4 z-50 flex items-center gap-3">
         <div id="guest-info" class="flex items-center gap-3 glass-card rounded-full px-4 py-2 cursor-pointer hover:bg-white/10 transition-all" onclick="openGuestSettings()">
             <img id="guest-avatar" src="" alt="avatar" class="w-8 h-8 rounded-full">
             <span id="guest-name" class="text-sm font-medium"></span>
@@ -52,6 +76,8 @@
     </div>
     
     <div id="app" class="relative z-10 container mx-auto px-4 py-8 min-h-screen flex flex-col">
+        
+        <main id="main-content" class="flex-1">
         
         <div id="home-page" class="flex-1 flex flex-col items-center justify-center">
             
@@ -310,7 +336,7 @@
             </button>
         </div>
         
-        <div id="control-panel-page" class="hidden flex-1 max-w-3xl mx-auto w-full">
+        <main id="control-panel-page" class="hidden flex-1 max-w-3xl mx-auto w-full">
             <div class="text-center mb-8 animate__animated animate__fadeInDown">
                 <h1 class="text-3xl md:text-4xl font-bold mb-4 shining-title">控制面板</h1>
                 <p class="text-gray-400">管理设置、数据和测试历史</p>
@@ -415,15 +441,15 @@
                     返回首页 <i class="fas fa-home ml-2"></i>
                 </button>
             </div>
-        </div>
+        </main>
     </div>
 
-    <div class="github-corner">
+    <footer class="github-corner" role="contentinfo">
         <a href="https://github.com/badhope?tab=repositories" target="_blank" class="github-link">
             <i class="fab fa-github"></i>
             <span class="github-text">觉得有趣？<br>来仓库点个 <b>Star ⭐</b> 呗！</span>
         </a>
-    </div>
+    </footer>
 
     <div id="guest-settings-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
         <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4 animate__animated animate__fadeInDown">
@@ -617,12 +643,68 @@
                     window.clearAllData();
                 }
                 localStorage.removeItem('guest_info');
-                showToast('数据已清除', 'success');
+                if (window.showToast) {
+                    window.showToast('数据已清除', 'success');
+                }
                 setTimeout(() => {
                     window.location.reload();
                 }, 1000);
             }
         }
+        
+        function initNetworkMonitor() {
+            const indicator = document.getElementById('network-indicator');
+            const statusText = document.getElementById('network-status-text');
+            
+            if (!indicator || !statusText) return;
+            
+            function updateNetworkStatus() {
+                if (!navigator.onLine) {
+                    indicator.className = 'network-indicator offline';
+                    statusText.textContent = '离线模式';
+                    indicator.classList.remove('hidden');
+                } else if (navigator.connection) {
+                    const connection = navigator.connection;
+                    const slowTypes = ['slow-2g', '2g', '3g'];
+                    if (slowTypes.includes(connection.effectiveType)) {
+                        indicator.className = 'network-indicator slow';
+                        statusText.textContent = '网络较慢';
+                        indicator.classList.remove('hidden');
+                        setTimeout(() => {
+                            indicator.classList.add('hidden');
+                        }, 3000);
+                    } else {
+                        indicator.className = 'network-indicator online hidden';
+                    }
+                } else {
+                    indicator.classList.add('hidden');
+                }
+            }
+            
+            updateNetworkStatus();
+            
+            window.addEventListener('online', () => {
+                updateNetworkStatus();
+                if (window.showToast) {
+                    window.showToast('网络已恢复', 'success');
+                }
+            });
+            
+            window.addEventListener('offline', () => {
+                updateNetworkStatus();
+                if (window.showToast) {
+                    window.showToast('网络已断开，正在使用离线模式', 'warning');
+                }
+            });
+            
+            if (navigator.connection) {
+                navigator.connection.addEventListener('change', updateNetworkStatus);
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            initNetworkMonitor();
+        });
     </script>
     
     <script>
