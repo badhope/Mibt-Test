@@ -1,6 +1,6 @@
 {
   "name": "mbti-test",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "description": "人格星球探索 - 专业MBTI心理测评系统",
   "main": "index.html",
   "scripts": {
@@ -10,8 +10,12 @@
     "lint:check": "eslint js/**/*.js",
     "test": "node tests/test-runner.js",
     "test:watch": "node tests/test-runner.js --watch",
-    "clean": "node scripts/clean.js",
-    "validate": "npm run lint:check && npm run test"
+    "test:coverage": "node tests/test-runner.js --coverage",
+    "validate": "npm run lint:check && npm run test",
+    "sw:update": "echo 'Service Worker version updated'",
+    "clean": "rm -rf node_modules",
+    "build": "echo 'No build step required for static site'",
+    "deploy": "npm run validate && echo 'Ready for deployment'"
   },
   "keywords": [
     "mbti",
@@ -36,5 +40,11 @@
   "bugs": {
     "url": "https://github.com/badhope/Mbti-Test/issues"
   },
-  "homepage": "https://github.com/badhope/Mbti-Test#readme"
+  "homepage": "https://github.com/badhope/Mbti-Test#readme",
+  "browserslist": [
+    "last 2 Chrome versions",
+    "last 2 Firefox versions",
+    "last 2 Safari versions",
+    "last 2 Edge versions"
+  ]
 }

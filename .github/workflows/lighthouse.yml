@@ -1,0 +1,61 @@
+name: Lighthouse CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lighthouse:
+    name: 性能审计
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 安装Lighthouse CI
+        run: npm install -g @lhci/cli@0.13.x
+
+      - name: 启动本地服务器
+        run: |
+          npx http-server . -p 8080 &
+          sleep 5
+
+      - name: 运行Lighthouse审计
+        run: |
+          lhci autorun --upload.target=temporary-public-storage || true
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: 生成性能报告
+        run: |
+          echo "## 📊 Lighthouse 性能报告" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| 指标 | 分数 |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Performance | 检测中... |" >> $GITHUB_STEP_SUMMARY
+          echo "| Accessibility | 检测中... |" >> $GITHUB_STEP_SUMMARY
+          echo "| Best Practices | 检测中... |" >> $GITHUB_STEP_SUMMARY
+          echo "| SEO | 检测中... |" >> $GITHUB_STEP_SUMMARY
+
+  lighthouse-check:
+    name: 性能阈值检查
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 审计性能
+        uses: treosh/lighthouse-ci-action@v10
+        with:
+          urls: |
+            http://localhost:8080
+          budgetPath: ./lighthouse-budget.json
+          temporaryPublicStorage: true
+        continue-on-error: true

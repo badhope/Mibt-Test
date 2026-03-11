@@ -5,6 +5,9 @@
   <img src="https://img.shields.io/github/license/badhope/Mbti-Test?logo=github&label=📜 许可证&color=7209b7&style=for-the-badge" alt="License">
   <img src="https://img.shields.io/github/languages/top/badhope/Mbti-Test?logo=github&label=💻 主语言&color=560bad&style=for-the-badge" alt="Language">
   <img src="https://img.shields.io/github/languages/code-size/badhope/Mbti-Test?logo=github&label=📦 代码体积&color=38b000&style=for-the-badge" alt="Code Size">
+  <br>
+  <img src="https://img.shields.io/github/actions/workflow/status/badhope/Mbti-Test/ci.yml?branch=main&label=CI&logo=github&style=for-the-badge" alt="CI Status">
+  <img src="https://img.shields.io/github/actions/workflow/status/badhope/Mbti-Test/deploy.yml?branch=main&label=Deploy&logo=github&style=for-the-badge" alt="Deploy Status">
 </div>
 
 # 🎭 人格星球探索 | 深度心理测评系统
@@ -20,6 +23,7 @@
 - 📤 **结果导出**：支持JSON、PDF、图片三种格式
 - 📱 **PWA支持**：可离线使用，支持安装到桌面
 - 🌙 **响应式设计**：完美适配手机、平板、电脑
+- ⚡ **CI/CD自动化**：自动测试、代码检查、部署
 
 ## 💻 技术栈
 
@@ -45,6 +49,7 @@
 - ✅ **模块化设计**：功能模块分离，代码结构清晰
 - ✅ **本地存储**：使用localStorage保存用户数据和测试历史
 - ✅ **Service Worker**：支持离线访问和资源缓存
+- ✅ **自动化CI/CD**：GitHub Actions自动测试和部署
 
 ## 🚀 快速开始
 
@@ -72,6 +77,16 @@ npm start
 
 ```
 Mbti-Test/
+├── .github/
+│   └── workflows/         # GitHub Actions工作流
+│       ├── ci.yml         # 持续集成
+│       ├── deploy.yml     # 自动部署
+│       └── lighthouse.yml # 性能审计
+├── docs/                  # 项目文档
+│   ├── MODULE_DESIGN.md   # 模块设计文档
+│   ├── TASK_BREAKDOWN.md  # 任务分解文档
+│   ├── DEVELOPMENT_PROCESS.md # 开发过程文档
+│   └── CHECKLIST.md       # 检查清单
 ├── js/                    # JavaScript模块
 │   ├── main.js           # 入口文件，初始化
 │   ├── core.js           # 核心测试逻辑
@@ -85,12 +100,14 @@ Mbti-Test/
 │   ├── fortune.js        # 运势和抽签功能
 │   └── background.js     # 背景管理
 ├── tests/                 # 测试文件
+│   └── test-runner.js    # 测试运行器
 ├── index.html            # 主页面
 ├── style.css             # 样式文件
 ├── manifest.json         # PWA配置
 ├── service-worker.js     # Service Worker
 ├── package.json          # 项目配置
 ├── .eslintrc.json        # ESLint配置
+├── lighthouse-budget.json # 性能预算配置
 └── README.md             # 项目文档
 ```
 
@@ -121,13 +138,48 @@ Mbti-Test/
 ### 代码规范
 项目使用ESLint进行代码规范检查：
 ```bash
-npm run lint
+npm run lint        # 检查并修复
+npm run lint:check  # 仅检查
 ```
 
 ### 运行测试
 ```bash
-npm test
+npm test            # 运行测试
+npm run validate    # 完整验证（lint + test）
 ```
+
+### NPM脚本
+| 脚本 | 说明 |
+|------|------|
+| `npm start` | 启动本地服务器 |
+| `npm test` | 运行测试套件 |
+| `npm run lint` | 代码检查并修复 |
+| `npm run validate` | 完整验证 |
+| `npm run serve` | 启动服务器（不打开浏览器） |
+
+## 📊 CI/CD流程
+
+项目配置了完整的CI/CD流水线：
+
+1. **持续集成 (CI)**
+   - 代码检查 (ESLint)
+   - 单元测试运行
+   - 安全审计
+
+2. **自动部署**
+   - main分支自动部署到GitHub Pages
+   - 部署前自动运行测试
+
+3. **性能监控**
+   - Lighthouse性能审计
+   - 性能预算检查
+
+## 📚 文档
+
+- [模块设计文档](docs/MODULE_DESIGN.md) - 详细的模块架构和接口定义
+- [任务分解文档](docs/TASK_BREAKDOWN.md) - 开发任务和优先级
+- [开发过程文档](docs/DEVELOPMENT_PROCESS.md) - 完整的开发记录
+- [检查清单](docs/CHECKLIST.md) - 项目验收检查项
 
 ## 📄 许可证
 

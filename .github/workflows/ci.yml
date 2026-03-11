@@ -1,0 +1,86 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    name: 代码检查
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: 安装依赖
+        run: npm ci
+
+      - name: 运行ESLint
+        run: npm run lint:check
+
+  test:
+    name: 单元测试
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: 安装依赖
+        run: npm ci
+
+      - name: 运行测试
+        run: npm test
+
+      - name: 上传测试报告
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-report
+          path: tests/
+          retention-days: 7
+
+  validate:
+    name: 完整验证
+    runs-on: ubuntu-latest
+    needs: [lint, test]
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: 安装依赖
+        run: npm ci
+
+      - name: 运行完整验证
+        run: npm run validate
+
+  security:
+    name: 安全检查
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 运行安全审计
+        run: npm audit --audit-level=moderate
+        continue-on-error: true
