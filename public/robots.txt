@@ -1,0 +1,6 @@
+# 允许所有搜索引擎抓取
+User-agent: *
+Allow: /
+
+# 站点地图位置
+Sitemap: https://badhope.github.io/Mibt-Test/sitemap.xml

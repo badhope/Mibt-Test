@@ -1,0 +1,68 @@
+{
+  "name": "人格星球探索 - 深度心理测评系统",
+  "short_name": "人格探索",
+  "description": "一个专业且有趣的MBTI人格测试Web应用，帮助用户探索内心宇宙，发现隐藏的性格属性。",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0a0a0f",
+  "theme_color": "#8b5cf6",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["entertainment", "lifestyle", "education"],
+  "lang": "zh-CN",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "开始测试",
+      "short_name": "测试",
+      "description": "开始人格测试",
+      "url": "/?action=test",
+      "icons": [{ "src": "favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "每日运势",
+      "short_name": "运势",
+      "description": "查看今日运势",
+      "url": "/?action=fortune",
+      "icons": [{ "src": "favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "控制面板",
+      "short_name": "设置",
+      "description": "打开设置面板",
+      "url": "/?action=settings",
+      "icons": [{ "src": "favicon.svg", "sizes": "any" }]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "favicon.svg",
+      "sizes": "1280x720",
+      "type": "image/svg+xml",
+      "form_factor": "wide",
+      "label": "人格星球探索首页"
+    }
+  ],
+  "related_applications": [],
+  "handle_links": "preferred",
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "edge_side_panel": {
+    "preferred_width": 400
+  }
+}

@@ -2,19 +2,25 @@
   "env": {
     "browser": true,
     "es2021": true,
-    "node": true
+    "node": true,
+    "serviceworker": true
   },
   "extends": [
     "eslint:recommended"
   ],
   "parserOptions": {
     "ecmaVersion": "latest",
-    "sourceType": "script"
+    "sourceType": "module"
   },
   "globals": {
     "particlesJS": "readonly",
     "anime": "readonly",
-    "confetti": "readonly"
+    "confetti": "readonly",
+    "self": "readonly",
+    "clients": "readonly",
+    "caches": "readonly",
+    "fetch": "readonly",
+    "Response": "readonly"
   },
   "rules": {
     "indent": ["error", 4, { "SwitchCase": 1 }],
